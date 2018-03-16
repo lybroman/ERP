@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>ERP - 供应商档案</title>
+{% load static %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+tr:hover
+{
+	cursor:pointer;
+}
+</style>
+<script>
+$(document).ready(function(){
+	 var t = $('#table_id').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 1, 'asc' ]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+	
+	$("#unit_price").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#unit_price").val()) || !re.test($("#amount").val()))
+			{
+				$("#total_price").val(-1)
+			}
+			else
+			{
+				$("#total_price").val(parseFloat($("#unit_price").val()) * parseFloat($("#amount").val()))
+			}
+			
+		})
+		
+	$("#amount").change(function(evt){
+		var re = /^[0-9]+.?[0-9]*$/;
+		if (!re.test($("#unit_price").val()) || !re.test($("#amount").val()))
+		{
+			$("#total").val(-1)
+		}
+		else
+		{
+			$("#total_price").val(parseFloat($("#unit_price").val()) * parseFloat($("#amount").val()))
+		}
+		
+	})
+	
+	$("tr").click(function(){
+		var tdArr = $(this).children();
+		for( var j = 0; j < tdArr.length; j++)
+		{
+			$(tdArr.eq(j).attr("key")).val(tdArr.eq(j).attr("data-src"))
+		}
+	})
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="\ERP\purchase_main\{{ target_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<table class="table" id="table_id">
+		   <caption>供应商档案</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+                 <th>供应商名称</th>
+				 <th>地址</th>
+				 <th>联系人</th>
+                 <th>电话</th>
+				 <th>等级</th>
+			 </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data %}
+				<tr class="success">
+					 <td key="#supplier_id" data-src="{{ item.supplier_id }}">{{ item.index }}</td>
+                     <td key="#supplier_name" data-src="{{ item.supplier_name }}"><a href="\ERP\purchase\supplier_detail\{{ item.supplier_name }}\{{ target_user }}\">{{ item.supplier_name }}</a></td>
+					 <td key="#supplier_address" data-src="{{ item.supplier_address }}">{{ item.supplier_address }}</td>
+					 <td key="#supplier_contact" data-src="{{ item.supplier_contact }}">{{ item.supplier_contact }}</td>
+                     <td key="#supplier_phone" data-src="{{ item.supplier_phone }}">{{ item.supplier_phone }}</td>
+					 <td key="#supplier_rank" data-src="{{ item.supplier_rank }}">{{ item.supplier_rank }}</td>
+				</tr>
+			 {% endfor %}
+		   </tbody>
+		</table>
+	</div>
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="sales_customer_archive" action="/ERP/purchase/purchase_supplier_archive/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display:none">
+				  <label for="name">target_user</label>
+				  <input type="text" class="form-control" name="target_user" 
+					 placeholder="" value="{{ target_user }}" id="target_user" required readonly>
+			   </div>
+			   <div class="form-group" style="display: none">
+				  <label for="name">supplier_id</label>
+				  <input type="text" class="form-control" name="supplier_id"
+					 placeholder="supplier_id" value="{{ item.supplier_id }}" id="supplier_id">
+				</div>
+				<div class="form-group">
+				  <label for="name">供应商名称</label>
+				  <input type="text" class="form-control" name="supplier_name" 
+					 placeholder="请输入供应商名称" value="" id="supplier_name" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">地址</label>
+				  <input type="text" class="form-control" name="supplier_address"
+					 placeholder="请输入地址" value="" id="supplier_address" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">联系人</label>
+				  <input type="text" class="form-control" name="supplier_contact"
+					 placeholder="请输入联系人" value="" id="supplier_contact" required>
+			   </div>
+                <div class="form-group">
+				  <label for="name">电话</label>
+				  <input type="text" class="form-control" name="supplier_phone"
+					 placeholder="请输入电话" value="" id="supplier_phone" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">等级</label>
+				  <input type="text" class="form-control" name="supplier_rank" 
+					 placeholder="请输入等级" value="" id ="supplier_rank" required>
+			   </div>
+			   <br><br>
+			 <div style="margin:0 auto; width:40%">
+			<button type="submit" class="btn btn-primary" name="operation" value="add" style="width:40%">新增</button>
+			<button type="submit" class="btn btn-primary" name="operation" value="update" style="width:40%">更新</button>
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>

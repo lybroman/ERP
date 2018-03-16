@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>{{ supplier_name}} Details - {{ target_user }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+tr:hover
+{
+	cursor:pointer;
+}
+</style>
+<script>
+$(document).ready(function(){
+	 var t = $('#table_id').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 1, 'asc' ]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+	
+	$("#unit_price").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#unit_price").val()) || !re.test($("#amount").val()))
+			{
+				$("#total_price").val(-1)
+			}
+			else
+			{
+				$("#total_price").val(parseFloat($("#unit_price").val()) * parseFloat($("#amount").val()))
+			}
+			
+		})
+		
+	$("#amount").change(function(evt){
+		var re = /^[0-9]+.?[0-9]*$/;
+		if (!re.test($("#unit_price").val()) || !re.test($("#amount").val()))
+		{
+			$("#total").val(-1)
+		}
+		else
+		{
+			$("#total_price").val(parseFloat($("#unit_price").val()) * parseFloat($("#amount").val()))
+		}
+		
+	})
+	$("tr").click(function(){
+		var tdArr = $(this).children();
+		for( var j = 0; j < tdArr.length; j++)
+		{
+			$(tdArr.eq(j).attr("key")).val(tdArr.eq(j).attr("data-src"))
+		}
+	})
+    $("#detail").click(function(evt){
+        $(".info").show()
+    })
+    $(".download-post").on("click", function(){
+		var target = $(this).attr('data-src')
+		var uuid  = $('#supplier_id').attr("value")
+		var post_data = {"operation":"download",
+									 "target": target,
+									 "uuid" : uuid}
+		post_data_content = 'operation=' + JSON.stringify(post_data)
+		alert('/ERP/purchase/supplier_detail/'+$("#supplier_name").attr("value")+'/'+$("#target_user").attr("value")+'/')
+        alert(post_data_content)
+		$.download('/ERP/purchase/supplier_detail/'+$("#supplier_name").attr("value")+'/'+$("#target_user").attr("value")+'/', post_data_content, 'post' )
+        alert(post_data_content)
+	})
+})
+jQuery.download = function(url, data, method){
+    if( url && data ){
+        data = typeof data == 'string' ? data : jQuery.param(data);
+        var inputs = '';
+        jQuery.each(data.split('&'), function(){
+            var pair = this.split('=');
+            inputs+="<input type='hidden' name='"+ pair[0] +"' value='" + pair[1] +"' />"
+			//alert(inputs)
+        });
+        jQuery('<form action="'+ url +'" method="'+ (method||'post') +'">'+inputs+'</form>')
+        .appendTo('body').submit().remove();
+    };};
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="/ERP/purchase_main/{{ target_user }}/"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="/ERP/login/"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+    <div class="form-wrapper" align="center">
+        <h2>{{ supplier_name }} <a id="detail">详情</a></h2>
+    </div>
+
+    <div class="form-wrapper info" style="display:none">
+		<form class="form-inline" role="form" id="storage_capital" action="/ERP/purchase/supplier_detail/{{ supplier_name }}/{{ target_user }}/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+
+				<div class="form-group" style="display:none">
+				  <label for="target_user">target_user</label>
+				  <input type="text" class="form-control" name="target_user"  id="target_user"
+					 placeholder="target_user" value="{{ target_user }}">
+				</div>
+				<div class="form-group">
+				  <label for="name">供应商名称</label>
+				  <input type="text" class="form-control" name="supplier_name"
+					 placeholder="请输入供应商名称" value="{{ supplier_name }}" id="supplier_name" readonly>
+			   </div>
+                {% for item in supplier_data %}
+                <div class="form-group" style="display: none">
+				  <label for="name">supplier_id</label>
+				  <input type="text" class="form-control" name="supplier_id"
+					 placeholder="supplier_id" value="{{ item.supplier_id }}" id="supplier_id">
+				</div>
+				<div class="form-group">
+				  <label for="name">联系人</label>
+				  <input type="text" class="form-control" name="supplier_contact"
+					 placeholder="请输入联系人" value="{{ item.supplier_contact }}" id="supplier_contact">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">地址</label>
+				  <input type="text" class="form-control" name="supplier_address"
+					 placeholder="请输入地址" value="{{ item.supplier_address }}" id="supplier_address">
+			   </div>
+			    <div class="form-group">
+				  <label for="name">联系电话</label>
+				  <input type="text" class="form-control" name="supplier_phone"
+					 placeholder="请输入联系电话" value="{{ item.supplier_phone }}" id="supplier_phone">
+			   </div>
+			    <div class="form-group">
+				  <label for="name">采购产品</label>
+				  <input type="text" class="form-control" name="supplier_product"
+					 placeholder="请输入采购产品" value="{{ item.supplier_product }}" id="supplier_product">
+			   </div>
+			    <div class="form-group">
+				  <label for="name">退货记录</label>
+				  <input type="text" class="form-control" name="return_list"
+					 placeholder="请输入退货记录" value="{{ item.return_list }}" id="return_list">
+			   </div>
+                <div class="form-group">
+				  <label for="name">供应商等级</label>
+				  <input type="text" class="form-control" name="supplier_rank"
+					 placeholder="请输入供应商等级" value="{{ item.supplier_rank }}" id="supplier_rank">
+			   </div>
+                <div class="form-group">
+				  <label for="name">备注</label>
+				  <input type="text" class="form-control" name="comment"
+					 placeholder="请输入备注" value="{{ item.comment }}" id="comment">
+			   </div>
+                <div class="form-group" style="width:30%">
+				  <label for="name">供应商调查表({{ item.supplier_table }})</label>
+				  <div class="input-group">
+					<input type="file" multiple class="form-control" name = "supplier_table">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="supplier_table">
+							<i class="fa fa-download fa-lg"></i>
+						</button>
+					</span>
+				  </div>
+			   </div>
+                {% endfor %}
+			   <br><br>
+			<button type="submit" class="btn btn-primary" name="operation" value="update">更新</button>
+            </div>
+		</form>
+	</div>
+
+	<div class="form-wrapper else_info" style="">
+		<table class="table" id="table_id">
+		   <caption>原料采购详情</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+				 <th>日期</th>
+				 <th>原料类别</th>
+                  <th>名称</th>
+                  <th>规格</th>
+				 <th>单价</th>
+				 <th>数量</th>
+				 <th>总价</th>
+				 <th>备注</th>
+			 </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data %}
+				<tr>
+					 <td key="#supplier_id" data-src="{{ item.supplier_id }}">{{ item.index }}</td>
+					 <td key="#purchase_date" data-src="{{ item.purchase_date }}">{{ item.purchase_date }}</td>
+					 <td key="#supplier_product" data-src="{{ item.supplier_product }}">{{ item.supplier_product }}</td>
+					<td key="#size" data-src="{{ item.size }}">{{ item.size }}</td>
+                    <td key="#purchase_name" data-src="{{ item.purchase_name }}">{{ item.purchase_name }}</td>
+                    <td key="#unit_price" data-src="{{ item.unit_price }}">{{ item.unit_price }}</td>
+					 <td key="#amount" data-src="{{ item.amount }}">{{ item.amount }}</td>
+					 <td key="#total_price" data-src="{{ item.total_price }}">{{ item.total_price }}</td>
+					 <td key="#comment" data-src="{{ item.comment }}">{{ item.comment }}</td>
+				</tr>
+			 {% endfor %}
+		   </tbody>
+		</table>
+    </div>
+
+</body>
+</html>

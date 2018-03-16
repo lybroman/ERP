@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>SALES-{{ sales.name }}</title>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="./css/font-awesome.min.css"/>
+<link rel="stylesheet", type="text/css" href="./css/style.css"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="#Home"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="#Login"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+
+	<div class="fixed-left-nav">
+		<h4>E R P</h4>
+		<img class="logo-img" src="./imgs/londerful_logo.png"/>
+		<div class="nav-list">
+			<a data-src="add">添加</a>
+		</div>
+	</div>
+
+	<div class="sales-executive-list">
+		<table class="table">
+		   <caption>销售执行表目录</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+				 <th>客户名称</th>
+				 <th>业务员</th>
+				 <th>公司信息</th>
+				 <th>国家</th>
+				 <th>产品类别</th>
+				 <th>状态</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+			  <tr class="active">
+				 <td><a>{{ index }}</a></td>
+				 <td><a>{{ customer }}</a></td>
+				 <td><a>{{ sales }}</a></td>
+				 <td>{{ company }}</td>
+				 <td><a>{{ nation }}</a></td>
+				 <td>{{ category }}</td>
+				 <td>{{ active }}</td>
+			  </tr>
+			  <tr class="success">
+				 <td><a>{{ index }}</a></td>
+				 <td><a>{{ customer }}</a></td>
+				 <td><a>{{ sales }}</a></td>
+				 <td>{{ company }}</td>
+				 <td><a>{{ nation }}</a></td>
+				 <td>{{ category }}</td>
+				 <td>{{ success }}</td>
+			  </tr>
+			  <tr class="warning">
+				 <td><a>{{ index }}</a></td>
+				 <td><a>{{ customer }}</a></td>
+				 <td><a>{{ sales }}</a></td>
+				 <td>{{ company }}</td>
+				 <td><a>{{ nation }}</a></td>
+				 <td>{{ category }}</td>
+				 <td>{{ warning }}</td>
+			  </tr>
+			  <tr class="danger">
+				 <td><a>{{ index }}</a></td>
+				 <td><a>{{ customer }}</a></td>
+				 <td><a>{{ sales }}</a></td>
+				 <td>{{ company }}</td>
+				 <td><a>{{ nation }}</a></td>
+				 <td>{{ category }}</td>
+				 <td>{{ danger }}</td>
+			  </tr>
+		   </tbody>
+		</table>
+	</div>
+
+</body>
+</html>

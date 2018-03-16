@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+{% load static %}
+{% load staticfiles %}
+<title>Quality Assurance - {{ user.username}}</title>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet", type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<style type="text/css">
+    span.search:hover
+    {
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="/ERP/quality_main/{{ data.target_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="/ERP/login/"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="/ERP/logout/"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="/ERP/message/"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="/ERP/request/"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+
+	<div class="fixed-left-nav">
+		<h4>E R P</h4>
+		<img class="logo-img" src="{% static "imgs/londerful_logo.png" %}"/>
+		<div class="nav-list">
+			<a href="/ERP/MHJ_track/" data-src="HOME">母合金追踪</a>
+			<a href="/ERP/DC_track/" data-src="REQUEST">带材追踪</a>
+			<a href="/ERP/CX_track/" data-src="REQUEST">铁芯追踪</a>
+		</div>
+	</div>
+
+    <div class="content-wrapper">
+        <br><br><br>
+        <form class="form-inline" role="form" action="/ERP/MHJ_track/" enctype="multipart/form-data" method="post" target="_parent">
+            <div class="input-group" style="width:70%; margin:0 auto;">
+                 <span class="input-group-addon">追踪编号</span>
+                 <input type="text" name="search_id" class="form-control" placeholder="{{ search_id }}">
+                 <span class="input-group-addon"><button ><i class="fa fa-search fa-lg spacer"></i></button></span>
+           </div>
+        </form>
+        <br><br><br>
+		<table class="table" id="sortTable">
+		   <caption>相关原料使用信息</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+                  <th>生产编号</th>
+                  <th>时间</th>
+				 <th>规格</th>
+				 <th>生产班组</th>
+				 <th>生产数量</th>
+                  <th>产品批次</th>
+                   <th>采购信息</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+            {%  for item in items %}
+                <tr>
+                    <td>{{ item.index }}</td>
+                    <td><a href="/ERP/produce_statistics_pendai/{{ item.item_uuid }}/{{ target_user }}/">{{ item.item_id }}</a></td>
+                    <td>{{ item.produce_date }}</td>
+                    <td>{{ item.item_size }}</td>
+                    <td>{{ item.item_class }}</td>
+                    <td>{{ item.item_weight }}</td>
+                    <td>{{ item.item_buyNo }}</td>
+                    <td>
+                        {% for pn in item.supplier %}
+                             <a href="/ERP/purchase/detail_uuid/{{ pn }}/">{{ pn }}</a>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {%  endfor %}
+		   </tbody>
+		</table>
+    </div>
+    <script>
+        $(document).ready(function(){
+             var t0 = $('#sortTable').DataTable( {
+                "columnDefs": [ {
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                } ],
+                "order": [[ 0, 'asc' ]]
+            } );
+
+             t0.on( 'order.dt search.dt', function () {
+                t0.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                    cell.innerHTML = i+1;
+                } );
+            } ).draw();
+        })
+    </script>
+</body>
+</html>

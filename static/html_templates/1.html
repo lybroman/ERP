@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>PRODUCE REQUEST FORM - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<script type="text/javascript" src="{% static "js/salesform.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body class="grey-scale">
+	{% if data.is_a_salesman %}
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="\ERP\sales_main\{{ current_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	{% endif %}
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="sales_form" action="/ERP/sample_form/{{ data.sales_form_uuid }}/{{ data.message_id }}/"  enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display:none">
+				  <label for="name">message_id</label>
+				  <input type="text" class="form-control" name="message_id"  id="message_id"
+					 placeholder="message_id" value="{{ data.message_id }}">
+				</div>
+				<div class="form-group" style="display:none">
+				  <label for="name">create_date</label>
+				  <input type="text" class="form-control" name="create_date"  id="create_date"
+					 placeholder="create_date" value="{{ data.create_date }}">
+				</div>
+            <div class="form-group" style="display:none">
+				  <label for="name">sales_form_uuid</label>
+				  <input type="text" class="form-control" name="sales_form_uuid"
+					 placeholder="请输入sales_form_uuid" value="{{ data.sales_form_uuid }}" readonly>
+			    </div>
+                <div class="form-group" style="display:none">
+				  <label for="name">sample_form_uuid</label>
+				  <input type="text" class="form-control" name=""
+					 placeholder="请输入sample_form_uuid" value="{{ data.message_id }}" readonly>
+			    </div>
+				{% if is_producer %}
+				<h3 style="text-align:center">生产单</h3>
+			    <div class="form-group">
+				  <label for="name">样品单号</label>
+				  <input type="text" class="form-control" name="index"
+					 placeholder="请输入样品单号" value="{{ data.index }}" readonly>
+			    </div>
+                <div class="form-group">
+				  <label for="name">销售单号</label>
+				  <input type="text" class="form-control" name="sale_index"
+					 placeholder="请输入销售单号" value="{{ data.sale_index }}" readonly>
+			    </div>
+				<div class="form-group">
+				  <label for="name">类别</label><br>
+				  <select class="form-control" name="category" readonly>
+					{% ifequal data.category "1" %}
+					 <option selected readonly>带材</option>
+					{% else %}
+					 <option readonly>带材</option>
+					{% endifequal %}
+					{% ifequal data.category "2" %}
+					 <option selected readonly>铁芯</option>
+					{% else %}
+					 <option readonly>铁芯</option>
+					{% endifequal %}
+					{% ifequal data.category "3" %}
+					 <option selected readonly>器件</option>
+					{% else %}
+					 <option readonly>器件</option>
+					{% endifequal %}
+				  </select>
+			    </div>
+				<div class="form-group">
+				  <label for="name">状态</label><br>
+				  <select class="form-control" name="statement" readonly>
+					{% ifequal data.statement "重要" %}
+					 <option selected readonly>重要</option>
+					 <option readonly>加急</option>
+					{% endifequal %}
+					{% ifequal data.statement "加急" %}
+					 <option readonly>重要</option>
+					 <option selected readonly>加急</option>
+					{% endifequal %}
+				  </select>
+			   </div>
+			   <div class="form-group">
+				   <label for="name">客户名称</label><br>
+				   <select class="form-control" name="customer" readonly>
+						{% for nm in companyName_list %}
+						{% ifequal nm data.customer %}
+						<option selected readonly>{{ nm }}</option>
+						{% else %}
+						<option readonly>{{ nm }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+			  </div>
+			   <div class="form-group">
+				  <label for="name">交单时间</label>
+				  <input type="date" class="form-control" name="submit_date"
+					 placeholder="请输入交单时间" value="{{ data.submit_date }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">联系人</label>
+				  <input type="text" class="form-control" name="contact_person"
+					 placeholder="请输入客户名称" value="{{ data.contact_person }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">电话</label>
+				  <input type="text" class="form-control" name="contact_person_phone"
+					 placeholder="请输入电话" value="{{ data.contact_person_phone }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">交货时间</label>
+				  <input type="date" class="form-control" name="due_date"
+					 placeholder="请输入交单时间" value="{{ data.due_date }}" readonly>
+			   </div>
+			</div>
+			<div class="sub-wrapper">
+				<h3 style="text-align:center">产品要求</h3>
+			    <div class="form-group">
+				  <label for="name">规格型号</label>
+				  <input type="text" class="form-control" name="size"
+					 placeholder="请输入规格型号" value="{{ data.size }}" readonly>
+			    </div>
+				<div class="form-group">
+				  <label for="name">需求量（个）</label>
+				  <input type="text" class="form-control" name="amount"
+					 placeholder="请输入需求量" value="{{ data.amount }}" readonly>
+			    </div>
+				<br>
+			   <div class="form-group" style="width:80%">
+				  <label for="name">产品要求</label>
+				 <textarea class="form-control" rows="4" name="requirement_0" placeholder="产品1级要求" readonly>{{ data.requirement_0 }}</textarea><br><br>
+				 <textarea class="form-control" rows="4" name="requirement_1" placeholder="产品2级要求" readonly>{{ data.requirement_1 }}</textarea><br><br>
+				 <textarea class="form-control" rows="4" name="requirement_2" placeholder="产品3级要求" readonly>{{ data.requirement_2 }}</textarea><br><br>
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:80%">
+				  <label for="name">备注</label>
+				  <textarea class="form-control" rows="4" name="sales_comment" placeholder="销售备注" readonly>{{ data.sales_comment }}</textarea>
+			   </div>
+			   <br>
+			   <div class="form-group">
+					<label for="name">业务经办</label></br>
+					<select class="form-control" name="producer" readonly>
+						{% for producer in data.producer_list %}
+							{% ifequal producer data.producer %}
+								<option selected>{{ producer }}</option>
+							{% else %}
+								<option>{{ producer }}</option>
+							{% endifequal %}
+						{% endfor %}
+					</select>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="producer_date"
+					 placeholder="请输入日期" value="{{ data.producer_date }}" readonly>
+			   </div>
+			    <div class="form-group">
+				  <label for="name">部门经理</label>
+				  <input type="text" class="form-control" name="approver"
+					 placeholder="请输入部门经理" value="{{ data.approver }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="approver_date"
+					 placeholder="请输入日期" value="{{ data.approver_date }}" readonly>
+			   </div>
+			   {% else %}
+			   <h3 style="text-align:center">生产单</h3>
+			    <div class="form-group">
+				  <label for="name">样品单号</label>
+				  <input type="text" class="form-control" name="index"
+					 placeholder="请输入样品单号" value="{{ data.index }}" readonly>
+			    </div>
+                <div class="form-group">
+				  <label for="name">销售单号</label>
+				  <input type="text" class="form-control" name="sale_index"
+					 placeholder="请输入销售单号" value="{{ data.sale_index }}">
+			    </div>
+				<div class="form-group">
+				  <label for="name">类别</label><br>
+				  <select class="form-control" name="category" required>
+					{% ifequal data.category "1" %}
+					 <option selected>带材</option>
+					{% else %}
+					 <option>带材</option>
+					{% endifequal %}
+					{% ifequal data.category "2" %}
+					 <option selected>铁芯</option>
+					{% else %}
+					 <option>铁芯</option>
+					{% endifequal %}
+					{% ifequal data.category "3" %}
+					 <option selected>器件</option>
+					{% else %}
+					 <option>器件</option>
+					{% endifequal %}
+				  </select>
+			    </div>
+				<div class="form-group">
+				  <label for="name">状态</label><br>
+				  <select class="form-control" name="statement" required>
+					{% ifequal data.statement "重要" %}
+					 <option selected>重要</option>
+					 <option>加急</option>
+					{% endifequal %}
+					{% ifequal data.statement "加急" %}
+					 <option>重要</option>
+					 <option selected>加急</option>
+					{% endifequal %}
+				  </select>
+			   </div>
+			   <div class="form-group">
+				   <label for="name">客户名称</label><br>
+				   <select class="form-control" name="customer" required>
+						{% for nm in companyName_list %}
+						{% ifequal nm data.customer %}
+						<option selected>{{ nm }}</option>
+						{% else %}
+						<option>{{ nm }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+			  </div>
+			   <div class="form-group">
+				  <label for="name">交单时间</label>
+				  <input type="date" class="form-control" name="submit_date"
+					 placeholder="请输入交单时间" value="{{ data.submit_date }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">联系人</label>
+				  <input type="text" class="form-control" name="contact_person"
+					 placeholder="请输入客户名称" value="{{ data.contact_person }}" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">电话</label>
+				  <input type="text" class="form-control" name="contact_person_phone"
+					 placeholder="请输入电话" value="{{ data.contact_person_phone }}" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">交货时间</label>
+				  <input type="date" class="form-control" name="due_date"
+					 placeholder="请输入交单时间" value="{{ data.due_date }}" required>
+			   </div>
+			</div>
+			<div class="sub-wrapper">
+				<h3 style="text-align:center">产品要求</h3>
+			    <div class="form-group">
+				  <label for="name">规格型号</label>
+				  <input type="text" class="form-control" name="size"
+					 placeholder="请输入规格型号" value="{{ data.size }}" required>
+			    </div>
+				<div class="form-group">
+				  <label for="name">需求量（个）</label>
+				  <input type="text" class="form-control" name="amount"
+					 placeholder="请输入需求量" value="{{ data.amount }}" required>
+			    </div>
+				<br>
+			   <div class="form-group" style="width:80%">
+				  <label for="name">产品要求</label>
+				 <textarea class="form-control" rows="4" name="requirement_0" placeholder="产品1级要求">{{ data.requirement_0 }}</textarea><br><br>
+				 <textarea class="form-control" rows="4" name="requirement_1" placeholder="产品2级要求">{{ data.requirement_1 }}</textarea><br><br>
+				 <textarea class="form-control" rows="4" name="requirement_2" placeholder="产品3级要求">{{ data.requirement_2 }}</textarea><br><br>
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:80%">
+				  <label for="name">备注</label>
+				  <textarea class="form-control" rows="4" name="sales_comment" placeholder="销售备注">{{ data.sales_comment }}</textarea>
+			   </div>
+			   <br>
+			   <div class="form-group">
+					<label for="name">业务经办</label></br>
+					<select class="form-control" name="producer">
+						{% for producer in data.producer_list %}
+							{% ifequal producer data.producer %}
+								<option selected>{{ producer }}</option>
+							{% else %}
+								<option>{{ producer }}</option>
+							{% endifequal %}
+						{% endfor %}
+					</select>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="producer_date"
+					 placeholder="请输入日期" value="{{ data.producer_date }}" >
+			   </div>
+			    <div class="form-group">
+				  <label for="name">部门经理</label>
+				  <input type="text" class="form-control" name="approver"
+					 placeholder="请输入部门经理" value="{{ data.approver }}" >
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="approver_date"
+					 placeholder="请输入日期" value="{{ data.approver_date }}" >
+			   </div>
+			   {% endif %}
+			</div>
+			<div class="sub-wrapper">
+				<h3 style="text-align:center">技术部</h3>
+				<div class="form-group" style="width:90%">
+				  <label for="name">备注</label>
+				  <textarea class="form-control" rows="3" name="technical_comment">{{ data.technical_comment }}</textarea>
+				</div>
+				<br>
+				<div class="form-group">
+				  <label for="name">部门经理</label>
+				  <input type="text" class="form-control" name="technician"
+					 placeholder="请输入部门经理" value="{{ data.technician }}" >
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="technician_date"
+					 placeholder="请输入日期" value="{{ data.technician_date }}" >
+			   </div>
+			</div>
+			<div class="sub-wrapper">
+				<h3 style="text-align:center">生产计划</h3>
+				{% if is_producer %}
+				<div class="form-group" style="width:15%">
+				  <label for="name">辊剪完成日期</label>
+				  <input type="date" class="form-control" name="producer_step_date_0"
+					 placeholder="请输入辊剪完成日期" value="{{ data.producer_step_date_0 }}" >
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:15%">
+				  <label for="name">卷绕完成日期</label>
+				  <input type="date" class="form-control" name="producer_step_date_1"
+					 placeholder="请输入卷绕完成日期" value="{{ data.producer_step_date_1 }}" >
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:15%">
+				  <label for="name">烧制完成日期</label>
+				  <input type="date" class="form-control" name="producer_step_date_2"
+					 placeholder="请输入烧制完成日期" value="{{ data.producer_step_date_2 }}" >
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:15%">
+				  <label for="name">组装护盒</label>
+				  <input type="date" class="form-control" name="producer_step_date_3"
+					 placeholder="请输入组装护盒日期" value="{{ data.producer_step_date_3 }}" >
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:15%">
+				  <label for="name">发货</label>
+				  <input type="date" class="form-control" name="producer_step_date_4"
+					 placeholder="请输入发货日期" value="{{ data.producer_step_date_4 }}" >
+			   </div>
+			   <br>
+			   <div class="form-group">
+				  <label for="name">计划员</label>
+				  <input type="text" class="form-control" name="planner"
+					 placeholder="请输入计划员" value="{{ data.planner }}" >
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="planner_date"
+					 placeholder="请输入日期" value="{{ data.planner_date }}" >
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:90%">
+				  <label for="name">备注</label>
+				  <textarea class="form-control" rows="3" name="planner_comment">{{ data.planner_comment }}</textarea>
+				</div>
+			</div>
+            <div class="sub-wrapper">
+				<h3 style="text-align:center">生产部</h3>
+                <div class="form-group">
+				  <label for="name">生产批次号（多个批次请用英文分号“;”隔开）</label>
+                    {% for item in produce_No_html %}
+                        <a href="/ERP/produce_statistics_{{ item.produce_type }}/{{ item.produce_uuid }}/">{{ item.produce_No }}</a> ;
+                    {% endfor %}
+                    <br>
+				  <input  class="form-control" name="produce_Nos"
+                            value="{{ data.produce_Nos }}">
+                  </input>
+			    </div>
+                <br><br>
+                <div class="form-group">
+				  <label for="name">生产状态  （填写“完成”才可以点击“生产完成”按钮）</label>
+				  <input type="text" class="form-control" name="produce_status"
+					 placeholder="请输入生产状态" value="{{ data.produce_status }}" required>
+			   </div>
+                <br><br>
+				<div class="form-group" style="width:90%">
+				  <label for="name">备注</label>
+				  <textarea class="form-control" rows="3" name="produce_comment">{{ data.produce_comment }}</textarea>
+				</div>
+				<br>
+				<div class="form-group">
+				  <label for="name">部门经理</label>
+				  <input type="text" class="form-control" name="producian"
+					 placeholder="请输入部门经理" value="{{ data.producian }}" >
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="producian_date"
+					 placeholder="请输入日期" value="{{ data.producian_date }}" >
+			   </div>
+			   {% else %}
+			   <div class="form-group" style="width:15%">
+				  <label for="name">辊剪完成日期</label>
+				  <input type="date" class="form-control" name="producer_step_date_0"
+					 placeholder="请输入辊剪完成日期" value="{{ data.producer_step_date_0 }}" readonly>
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:15%">
+				  <label for="name">卷绕完成日期</label>
+				  <input type="date" class="form-control" name="producer_step_date_1"
+					 placeholder="请输入卷绕完成日期" value="{{ data.producer_step_date_1 }}" readonly>
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:15%">
+				  <label for="name">烧制完成日期</label>
+				  <input type="date" class="form-control" name="producer_step_date_2"
+					 placeholder="请输入烧制完成日期" value="{{ data.producer_step_date_2 }}" readonly>
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:15%">
+				  <label for="name">组装护盒</label>
+				  <input type="date" class="form-control" name="producer_step_date_3"
+					 placeholder="请输入组装护盒日期" value="{{ data.producer_step_date_3 }}" readonly>
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:15%">
+				  <label for="name">发货</label>
+				  <input type="date" class="form-control" name="producer_step_date_4"
+					 placeholder="请输入发货日期" value="{{ data.producer_step_date_4 }}" readonly>
+			   </div>
+			   <br>
+			   <div class="form-group">
+				  <label for="name">计划员</label>
+				  <input type="text" class="form-control" name="planner"
+					 placeholder="请输入计划员" value="{{ data.planner }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="planner_date"
+					 placeholder="请输入日期" value="{{ data.planner_date }}" readonly>
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:90%">
+				  <label for="name">备注</label>
+				  <textarea class="form-control" rows="3" name="planner_comment" readonly>{{ data.planner_comment }}</textarea>
+				</div>
+			</div>
+            <div class="sub-wrapper">
+				<h3 style="text-align:center">生产部</h3>
+                    <div class="form-group">
+				  <label for="name">生产批次号（多个批次请用英文分号“;”隔开）</label>
+                    {% for item in produce_No_html %}
+                        <a href="/ERP/produce_statistics_{{ item.produce_type }}/{{ item.produce_uuid }}/">{{ item.produce_No }}</a> ;
+                    {% endfor %}
+                    <br>
+				  <input  class="form-control" name="produce_Nos"
+                            value="{{ data.produce_Nos }}">
+                  </input>
+			    </div>
+                <br><br>
+                <div class="form-group">
+				  <label for="name">生产状态  （填写“完成”才可以点击“生产完成”按钮）</label>
+				  <input type="text" class="form-control" name="produce_status"
+					 placeholder="请输入生产状态" value="{{ data.produce_status }}" required>
+			   </div>
+                <br><br>
+				<div class="form-group" style="width:90%">
+				  <label for="name">备注</label>
+				  <textarea class="form-control" rows="3" name="produce_comment" readonly>{{ data.produce_comment }}</textarea>
+				</div>
+				<br>
+				<div class="form-group">
+				  <label for="name">部门经理</label>
+				  <input type="text" class="form-control" name="producian"
+					 placeholder="请输入部门经理" value="{{ data.producian }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="producian_date"
+					 placeholder="请输入日期" value="{{ data.producian_date }}" readonly>
+			   </div>
+			 {% endif %}
+			</div>
+			<div class="sub-wrapper">
+				<h3 style="text-align:center">物流</h3>
+				<div class="form-group" style="width:15%">
+				  <label for="name">物流单号</label>
+				  <input type="text" class="form-control" name="track_number"
+					 placeholder="请输入物流单号" value="{{ data.track_number }}" >
+			   </div>
+			   <div class="form-group" style="width:15%">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="delivery_date"
+					 placeholder="请输入日期" value="{{ data.delivery_date }}" >
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:50%">
+				  <label for="name">地址</label>
+				  <input type="text" class="form-control" name="delivery_address"
+					 placeholder="请输入地址" value="{{ data.delivery_address }}" required>
+			   </div>
+			   <br>
+			   <div class="form-group">
+				  <label for="name">部门经理</label>
+				  <input type="text" class="form-control" name="manager"
+					 placeholder="请输入部门经理" value="{{ data.manager }}" >
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="manager_date"
+					 placeholder="请输入日期" value="{{ data.manager_date }}" >
+			   </div>
+			</div>
+            {% ifnotequal data.produce_status "完成" %}
+                {% if not is_storage %}
+                    <div style="width:25%; margin:0 auto; margin-bottom: 10px">
+                        <button type="submit" class="btn btn-primary" style="width:40%">表单更新</button>
+                        <button type="submit" class="btn btn-primary" name="operation" value="finish" style="width:40%; margin-left: 50px">生产完成</button>
+                    </div>
+                {% else %}
+                    <div style="width:25%; margin:0 auto; margin-bottom: 10px">
+                        <button type="submit" class="btn btn-primary" style="width:40%" disabled>表单更新</button>
+                        <button type="submit" class="btn btn-primary" name="operation" value="finish" style="width:40%; margin-left: 50px" disabled>生产完成</button>
+                    </div>
+                {% endif %}
+            {% else %}
+            <div style="width:25%; margin:0 auto; margin-bottom: 10px">
+				<button type="submit" class="btn btn-primary" style="width:40%" disabled>表单更新</button>
+                <button type="submit" class="btn btn-primary" name="operation" value="finish" style="width:40%; margin-left: 50px" disabled>生产完成</button>
+			</div>
+            {% endifnotequal %}
+		</form>
+	</div>
+</body>
+</html>

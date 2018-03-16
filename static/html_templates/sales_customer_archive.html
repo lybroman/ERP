@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>ERP - 客户档案</title>
+{% load static %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+tr:hover
+{
+	cursor:pointer;
+}
+</style>
+<script>
+$(document).ready(function(){
+	 var t = $('#table_id').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 1, 'asc' ]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+	
+	$("#unit_price").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#unit_price").val()) || !re.test($("#amount").val()))
+			{
+				$("#total_price").val(-1)
+			}
+			else
+			{
+				$("#total_price").val(parseFloat($("#unit_price").val()) * parseFloat($("#amount").val()))
+			}
+			
+		})
+		
+	$("#amount").change(function(evt){
+		var re = /^[0-9]+.?[0-9]*$/;
+		if (!re.test($("#unit_price").val()) || !re.test($("#amount").val()))
+		{
+			$("#total").val(-1)
+		}
+		else
+		{
+			$("#total_price").val(parseFloat($("#unit_price").val()) * parseFloat($("#amount").val()))
+		}
+		
+	})
+	
+	$("tr").click(function(){
+		var tdArr = $(this).children();
+		for( var j = 0; j < tdArr.length; j++)
+		{
+			$(tdArr.eq(j).attr("key")).val(tdArr.eq(j).attr("data-src"))
+		}
+	})
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="\ERP\sales_main\{{ target_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<table class="table" id="table_id">
+		   <caption>客户档案</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+                 <th>客户名称</th>
+				 <th>地址</th>
+				 <th>联系人</th>
+                 <th>电话</th>
+				 <th>传真</th>
+				 <th>邮件</th>
+				 <th>等级</th>
+				 <!--th>备注</th-->
+			 </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data %}
+				<tr class="success">
+					 <td key="#" data-src="#">{{ item.index }}</td>
+                     <td key="#customer_name" data-src="{{ item.customer_name }}"><a href="/ERP/sales_customer_archive?customer_name={{ item.customer_name }}&target_user={{ target_user }}">{{ item.customer_name }}</a></td>
+					 <td key="#customer_address" data-src="{{ item.customer_address }}">{{ item.customer_address }}</td>
+					 <td key="#customer_contact" data-src="{{ item.customer_contact }}">{{ item.customer_contact }}</td>
+                     <td key="#customer_mobile" data-src="{{ item.customer_mobile }}">{{ item.customer_mobile }}</td>
+					 <td key="#customer_fax" data-src="{{ item.customer_fax }}">{{ item.customer_fax }}</td>
+					 <td key="#customer_email" data-src="{{ item.customer_email }}">{{ item.customer_email }}</td>
+					 <td key="#customer_rank" data-src="{{ item.customer_rank }}">{{ item.customer_rank }}</td>
+					 <!--td key="#customer_comment" data-src="{{ item.customer_comment }}" style="display:none">{{ item.customer_comment }}</td-->
+				</tr>
+			 {% endfor %}
+		   </tbody>
+		</table>
+	</div>
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="sales_customer_archive" action="/ERP/sales_customer_archive/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display:none">
+				  <label for="name">target_user</label>
+				  <input type="text" class="form-control" name="target_user" 
+					 placeholder="" value="{{ target_user }}" id="target_user" required readonly>
+			   </div>
+				<div class="form-group">
+				  <label for="name">客户名称</label>
+				  <input type="text" class="form-control" name="customer_name" 
+					 placeholder="请输入客户名称" value="" id="customer_name" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">地址</label>
+				  <input type="text" class="form-control" name="customer_address"
+					 placeholder="请输入地址" value="" id="customer_address" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">联系人</label>
+				  <input type="text" class="form-control" name="customer_contact"
+					 placeholder="请输入联系人" value="" id="customer_contact" required>
+			   </div>
+                <div class="form-group">
+				  <label for="name">电话</label>
+				  <input type="text" class="form-control" name="customer_mobile"
+					 placeholder="请输入电话" value="" id="customer_mobile" required>
+			   </div>
+				<div class="form-group">
+				  <label for="name">传真</label>
+				  <input type="text" class="form-control" name="customer_fax" 
+					 placeholder="请输入传真" value="" id="customer_fax" required>
+			   </div>
+			    <div class="form-group">
+				  <label for="name">邮件</label>
+				  <input type="text" class="form-control" name="customer_email" 
+					 placeholder="请输入邮件" value="" id="customer_email" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">等级</label>
+				  <input type="text" class="form-control" name="customer_rank" 
+					 placeholder="请输入等级" value="" id ="customer_rank" required>
+			   </div>
+			   <br><br>
+			 <div style="margin:0 auto; width:40%">
+			<button type="submit" class="btn btn-primary" name="operation" value="add" style="width:40%">新增</button>
+			<button type="submit" class="btn btn-primary" name="operation" value="update" style="width:40%">更新</button>
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>

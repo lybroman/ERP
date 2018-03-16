@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>EXECUTIVE FORM - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<script type="text/javascript" src="{% static "js/salesform.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+
+				   <li><a href="\ERP\sales_main\{{ current_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="sales_form" action="/ERP/sales_form/{{ data.uuid }}/{{ target_user }}/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display: none">
+				  <label for="name">uuid</label>
+				  <input type="text" class="form-control" name="uuid"  id="uuid"
+					 placeholder="uuid" value="{{ data.uuid }}">
+				</div>
+				<div class="form-group" style="display: none">
+				  <label for="name">target_user</label>
+				  <input type="text" class="form-control" name="target_user"  id="target_user"
+					 placeholder="target_user" value="{{ target_user }}">
+				</div>
+				<h4>简要信息</h4>
+			   <div class="form-group">
+				  <label for="name">序号</label>
+				  <input type="text" class="form-control" name="No"
+					 placeholder="请输入序号" value="{{ data.No }}" required>
+			   </div>
+			   <div class="form-group">
+				   <label for="name">客户名称</label><br>
+				   <select class="form-control" name="companyName">
+						{% for nm in companyName_list %}
+						{% ifequal nm data.companyName %}
+						<option selected>{{ nm }}</option>
+						{% else %}
+						<option>{{ nm }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+				  <label for="name">业务员</label>
+				  <input type="text" class="form-control" name="salesman"
+					 placeholder="请输入业务员" value="{{ data.salesman }}" required>
+			   </div>
+				<div class="form-group">
+				  <label for="name">公司信息</label>
+				  <input type="text" class="form-control" name="companyInfo"
+					 placeholder="请输公司信息" value="{{ data.companyInfo }}" required>
+			   </div>
+				<div class="form-group">
+				  <label for="name">国家</label>
+				  <input type="text" class="form-control" name="country"
+					 placeholder="请输入国家" value="{{ data.country }}" required>
+			   </div>
+			   <br>
+			   <br>
+			   <div class="form-group">
+				  <label for="name">产品类别</label>
+				  <select class="form-control" name="productType">
+					{% ifequal data.productType 1 %}
+					 <option selected>带材</option>
+					 <option>铁芯</option>
+					 <option>器件</option>
+					{% endifequal %}
+					{% ifequal data.productType 2 %}
+					 <option>带材</option>
+					 <option selected>铁芯</option>
+					 <option>器件</option>
+					{% endifequal %}
+					{% ifequal data.productType 3 %}
+					 <option>带材</option>
+					 <option>铁芯</option>
+					 <option selected>器件</option>
+					{% endifequal %}
+				  </select>
+			   </div>
+			</div>
+			<div class="sub-wrapper">
+			   <h4>沟通</h4>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="date"
+					 placeholder="请输入日期" value="{{ data.date }}" required>
+			   </div>
+				<div class="form-group">
+				  <label for="name">产品代码</label>
+				  <input type="text" class="form-control" name="productCode"
+					 placeholder="请输入产品代码" value="{{ data.productCode }}" required>
+			   </div>
+				<div class="form-group">
+				  <label for="name">导磁率</label>
+				  <input type="text" class="form-control" name="mag"
+					 placeholder="请输入导磁率" value="{{ data.mag }}">
+			   </div>
+				<div class="form-group" style="width:30%">
+				  <label for="name">规格书({{ data.specification }})</label>
+				  <div class="input-group">
+					<input type="file" multiple class="form-control" name = "specification">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="specification">
+							<i class="fa fa-download fa-lg"></i>
+                        </button>
+                        <button class="btn btn-default preview-post" type="button" data-src="{{ data.full_specification }}">
+                            <a href="{{ data.full_specification }}"><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">竞争对手</label>
+				  <input type="text" class="form-control" name="opponent"
+					 placeholder="请输入竞争对手" value="{{ data.opponent }}">
+			   </div>
+				<div class="form-group">
+				  <label for="name">预测实际用量</label>
+				  <input type="text" class="form-control" name="quantityActual"
+					 placeholder="请输入预测实际用量" value="{{ data.quantityActual }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">估值</label>
+				  <input type="text" class="form-control" name="assessment"
+					 placeholder="请输入估值" value="{{ data.assessment }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">需求量</label>
+				  <input type="text" class="form-control" name="quantityDemand"
+					 placeholder="请输入需求量" value="{{ data.quantityDemand }}" id="amount">
+			   </div>
+			   <div class="form-group">
+				   <label for="name">单位</label><br>
+				   <select class="form-control" name="amount_unit">
+						{% for unit in amount_unit_list %}
+						{% ifequal unit data.amount_unit %}
+						<option selected>{{ unit }}</option>
+						{% else %}
+						<option>{{ unit }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+				</div>
+			   <div class="form-group">
+				  <label for="name">单价</label>
+				  <input type="text" class="form-control" name="priceUnit"
+					 placeholder="请输入单价" value="{{ data.priceUnit }}" id="unit">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">总金额</label>
+				  <input type="text" class="form-control" name="priceTotal"
+					 placeholder="请输入总金额" value="{{ data.priceTotal }}" id="total" readonly>
+			   </div>
+			    <div class="form-group">
+				   <label for="name">货币单位</label><br>
+				   <select class="form-control" name="currency_unit">
+						{% for unit in currency_unit_list %}
+							{% ifequal unit data.currency_unit %}
+							<option selected>{{ unit }}</option>
+							{% else %}
+							<option>{{ unit }}</option>
+							{% endifequal %}
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+				  <label for="name">当前汇率</label>
+				  <input type="text" class="form-control" name="currency_rate"
+					 placeholder="当前汇率" value="{{ data.currency_rate }}" id="currency_rate">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">付款方式</label>
+				  <input type="text" class="form-control" name="payment"
+					 placeholder="e.g. 两月月结 + 存兑汇票" value="{{ data.payment }}">
+			   </div>
+			</div>
+			<div class="sub-wrapper">
+			    <h4>进展（计划）</h4>
+			    <div class="form-group">
+				  <label for="name">供应商调查</label>
+				  <input type="text" class="form-control" name="supplierP"
+					 placeholder="请输入供应商调查" value="{{ data.supplierP }}">
+			    </div>
+				<div class="form-group">
+				  <label for="name">询价</label>
+				  <input type="date" class="form-control" name="inquiryP"
+					 placeholder="请输入询价" value="{{ data.inquiryP }}">
+			    </div>
+				<div class="form-group">
+				  <label for="name">报价</label>
+				  <input type="date" class="form-control" name="quoteP"
+					 placeholder="请输入报价" value="{{ data.quoteP }}">
+			    </div>
+			    <div class="form-group">
+				  <label for="name">样品</label>
+				  <input type="date" class="form-control" name="sampleP"
+					 placeholder="请输入样品" value="{{ data.sampleP }}">
+			    </div>
+			    <div class="form-group">
+				  <label for="name">检测</label>
+				  <input type="date" class="form-control" name="testP"
+					 placeholder="请输入检测" value="{{ data.testP }}">
+			    </div>
+			    <div class="form-group">
+				  <label for="name">小批</label>
+				  <input type="date" class="form-control" name="smallOrderP"
+					 placeholder="请输入小批" value="{{ data.smallOrderP }}">
+			    </div>
+			</div>
+			<div class="sub-wrapper">
+			    <h4>进展（实际）</h4>
+			    <div class="form-group">
+				  <label for="name">供应商调查</label>
+				  <input type="date" class="form-control" name="supplier"
+					 placeholder="请输入供应商调查" value="{{ data.supplier }}">
+			    </div>
+				<div class="form-group">
+				  <label for="name">样品发货日期</label>
+				  <input type="date" class="form-control" name="dateDeliver"
+					 placeholder="请输入询价" value="{{ data.dateDeliver }}">
+			    </div>
+				<div class="form-group">
+				  <label for="name">样品个数</label>
+				  <input type="text" class="form-control" name="sampleNum"
+					 placeholder="请输入报价" value="{{ data.sampleNum }}">
+			    </div>
+			    <div class="form-group" style="width:30%">
+				  <label for="name">样品单号({{ data.sampleNo }})</label>
+				  <div class="input-group">
+					<input type="file" multiple class="form-control" name = "sampleNo">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="sampleNo">
+							<i class="fa fa-download fa-lg" data-src="sampleNo"></i>
+                        </button>
+                        <button class="btn btn-default preview-post" type="button" data-src="{{ data.full_sampleNo }}">
+                            <a href="{{ data.full_sampleNo }}"><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			    </div>
+			   <div class="form-group">
+				  <label for="name">检测</label>
+				  <input type="date" class="form-control" name="test"
+					 placeholder="请输入检测" value="{{ data.test }}">
+			   </div>
+			   <div class="form-group" style="width:30%">
+				  <label for="name">小批({{ data.smallOrder }})</label>
+				  <div class="input-group">
+					<input type="file" multiple class="form-control" name = "smallOrder">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="smallOrder">
+							<i class="fa fa-download fa-lg" data-src="smallOrder"></i>
+						</button>
+                        <button class="btn btn-default preview-post" type="button" data-src="{{ data.full_smallOrder }}">
+							<a href="{{ data.full_smallOrder }}"><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			</div>
+			<div class="sub-wrapper-inline">
+			   <h5>报价</h5>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="dateQuote"
+					 placeholder="请输入供应商调查" value="{{ data.dateQuote }}">
+			   </div>
+				<div class="form-group">
+				  <label for="name">申请报价</label>
+				  <input type="text" class="form-control" name="quoteApply"
+					 placeholder="请输入询价" value="{{ data.quoteApply }}">
+			   </div>
+			   <div class="form-group" style="display:none">
+				  <label for="name">message_id</label>
+				  <input type="text" class="form-control" name="message_id"
+					 placeholder="message_id" value="{{ data.message_id }}">
+				</div>
+			   <div class="form-group">
+			   <label for="name">批准人{{ data.approver }}</label><br>
+				  <select class="form-control" name="approver">
+					{% for approver in data.approver_list %}
+					{% ifequal approver data.approver %}
+					 <option selected>{{ approver }}</option>
+					{% else %}
+					 <option>{{ approver }}</option>
+					{% endifequal %}
+					{% endfor %}
+				  </select>
+				</div>
+				<div class="form-group">
+				  <label for="name">导出报价单({{ data.quoteOrder }})</label>
+				  <div class="input-group" style="width:70%">
+					<input type="file" multiple class="form-control" name = "quoteOrder">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="quoteOrder">
+							<i class="fa fa-download fa-lg" data-src="quoteOrder"></i>
+						</button>
+						<button class="btn btn-default preview-post" type="button" data-src="{{ data.full_quoteOrder }}">
+                            <a href="{{ data.full_quoteOrder }}"><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			</div>
+			<div class="sub-wrapper-inline">
+			   <h5>样品</h5>
+			   <div class="form-group">
+				  <label for="name">合同评审单号({{ data.contractReviewNoS }})</label>
+				  <div class="input-group" style="width:70%">
+					<input type="file" multiple class="form-control" name = "contractReviewNoS">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="contractReviewNoS">
+							<i class="fa fa-download fa-lg" data-src="contractReviewNoS"></i>
+						</button>
+						<button class="btn btn-default preview-post" type="button" data-src="{{ data.full_contractReviewNoS }}">
+                            <a href="{{ data.full_contractReviewNoS }}"><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			   <br>
+			   <div class="form-group">
+					<label for="name">销售出库单号({{ data.salesNoS }})</label>
+					<div class="input-group" style="width:70%">
+					<input type="file" multiple class="form-control" name = "salesNoS">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="salesNoS">
+							<i class="fa fa-download fa-lg" data-src="salesNoS"></i>
+						</button>
+						<button class="btn btn-default preview-post" type="button" data-src="{{ data.full_salesNoS }}">
+                            <a href="{{ data.full_salesNoS }}"><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+					</div>
+			   </div>
+                <div class="form-group" style="display: None">
+				  <label for="name">样品单</label>
+				  <input type="text" class="form-control" name="sample_form_uuid"
+					 placeholder="样品单" value="{{ data.sample_form_uuid }}">
+			   </div>
+			   <div class="form-group">
+					<label for="name">样品单({{ data.sample_form_index }})</label>
+					<div class="input-group" style="width:70%">
+					<span class="input-group-btn">
+						<a href="/ERP/sample_form/{{ data.uuid }}/{{ data.sample_form_uuid }}/{{ target_user }}/">
+							<button class="btn btn-default" type="button" data-src="sampleForm" style="width:60%">
+								<i class="fa fa-level-up fa-lg" data-src="sampleForm"></i>
+							</button>
+						</a>
+					</span>
+					</div>
+			   </div>
+			</div>
+			<div class="sub-wrapper-inline">
+			   <h5>订单</h5>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="dateOrder"
+					 placeholder="请输入样品" value="{{ data.dateOrder }}">
+			   </div>
+			    <div class="form-group">
+				  <label for="name">信息</label>
+				  <input type="text" class="form-control" name="orderInfo"
+					 placeholder="请输入小批" value="{{ data.orderInfo }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">订单号({{ data.orderNo }})</label>
+				  <div class="input-group" style="width:70%">
+					<input type="file" multiple class="form-control" name = "orderNo">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="orderNo">
+							<i class="fa fa-download fa-lg" data-src="orderNo"></i>
+						</button>
+						<button class="btn btn-default preview-post" type="button" data-src="{{ data.full_orderNo }}">
+                            <a href="{{ data.full_orderNo }}"><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			</div>
+			<div class="sub-wrapper-inline">
+			   <h5>产品</h5>
+			   <div class="form-group">
+				  <label for="name">合同评审单号({{ data.contractReviewNoP }})</label>
+				  <div class="input-group" style="width:70%">
+					<input type="file" multiple class="form-control" name = "contractReviewNoP">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="contractReviewNoP">
+							<i class="fa fa-download fa-lg" data-src="contractReviewNoP"></i>
+						</button>
+						<button class="btn btn-default preview-post" type="button" data-src="{{ data.full_contractReviewNoP }}">
+                            <a href="{{ data.full_contractReviewNoP }}"><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			   <br>
+			   <div class="form-group">
+				  <label for="name">销售出库单号({{ data.salesNoP }})</label>
+				  <div class="input-group" style="width:70%">
+					<input type="file" multiple class="form-control" name = "salesNoP">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="salesNoP">
+							<i class="fa fa-download fa-lg" data-src="salesNoP"></i>
+						</button>
+						<button class="btn btn-default preview-post" type="button" data-src="{{ data.full_salesNoP }}">
+                            <a href="{{ data.full_salesNoP }}"><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			</div>
+			<div class="sub-wrapper-inline">
+			   <h5>合同</h5>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="dateContract"
+					 placeholder="请输入日期" value="{{ data.dateContract }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">信息</label>
+				  <input type="text" class="form-control" name="contractInfo"
+					 placeholder="请输入信息" value="{{ data.contractInfo }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">合同号({{ data.contractNo }})</label>
+				  <div class="input-group" style="width:70%">
+					<input type="file" multiple class="form-control" name = "contractNo">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="contractNo">
+							<i class="fa fa-download fa-lg" data-src="contractNo"></i>
+						</button>
+						<button class="btn btn-default preview-post" type="button" data-src="{{ data.full_contractNo }}">
+                            <a href="{{ data.full_contractNo }}"></a><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			</div>
+			<div class="sub-wrapper-inline">
+			   <h5>生产</h5>
+			   <div class="form-group">
+				  <label for="name">生产动态</label>
+				  <input type="text" class="form-control" name="produceStatus"
+					 placeholder="请输入生产动态" value="{{ data.produceStatus }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">物流单号</label>
+				  <input type="text" class="form-control" name="transNo"
+					 placeholder="请输入物流单号" value="{{ data.transNo }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">生产单号({{ data.produceNo }})</label>
+				  <div class="input-group" style="width:70%">
+					<input type="file" multiple class="form-control" name = "produceNo">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="produceNo">
+							<i class="fa fa-download fa-lg" data-src="produceNo"></i>
+						</button>
+						<button class="btn btn-default preview-post" type="button" data-src="{{ data.full_produceNo }}">
+                            <a href="{{ data.full_produceNo }}"></a><i class="fa fa-file-pdf-o fa-lg"></i></a>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			</div>
+			<div class="sub-wrapper" style="text-align:center">
+			   <div class="form-group" style="width:80%">
+				<label for="name">备注</label>
+				<textarea class="form-control" rows="3" name="comments">{{ data.comments }}</textarea>
+			  </div>
+			</div>
+			<div style="width:20%; margin:0 auto; margin-bottom: 10px">
+				<button type="submit" class="btn btn-primary" style="width:95%">提交</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

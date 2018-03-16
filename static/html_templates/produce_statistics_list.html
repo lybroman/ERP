@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>PRODUCE STATISTICS List - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<script>
+$(document).ready(function(){
+	 var t0 = $('#sortTable_0').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 0, 'asc' ]]
+    } );
+ 
+    t0.on( 'order.dt search.dt', function () {
+        t0.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+	
+	var t1 = $('#sortTable_1').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 0 , 'asc' ]]
+    } );
+ 
+    t1.on( 'order.dt search.dt', function () {
+        t1.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+	
+	var t2 = $('#sortTable_2').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 0, 'asc' ]]
+    } );
+ 
+    t2.on( 'order.dt search.dt', function () {
+        t2.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="/ERP/produce_main/{{ target_user }}/"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="/ERP/login/"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="/ERP/logout/"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="/ERP/message/"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="/ERP/request/"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="produce-statistics-list">
+		<table class="table" id="sortTable_0">
+		   <caption>喷带生产统计表</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+                  <th>生产批次</th>
+				 <th>日期</th>
+				 <th>规格</th>
+				 <th>班组</th>
+				 <!-- <th>炉号</th> -->
+				 <th>A</th>
+				 <th>B</th>
+				 <th>C</th>
+				 <th>D</th>
+				 <th>重量</th>
+				 <th>母合金使用量</th>
+				 <th>合格率</th>
+				 <th>备注</th>
+                  <th>操作</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data_pendai %}
+					{% if item.item_rate < 0.6 %}
+					<tr class="danger">
+					{% elif item.item_rate < 0.8  %}
+					<tr class="warning">
+					{% else %}
+					<tr class="success">
+					{% endif %}
+						 <td>{{ item.no }}</td>
+                         <td><a href="/ERP/produce_statistics_pendai/{{ item.item_uuid }}/{{ target_user }}/">{{ item.item_id }}</a></td>
+						 <td>{{ item.produce_date }}</td>
+						 <td>{{ item.item_size }}</td>
+						 <td>{{ item.item_class }}</td>
+						 <!-- <td>{{ item.item_container }}</td> -->
+						 <td>{{ item.item_A }}</td>
+						 <td>{{ item.item_B }}</td>
+						 <td>{{ item.item_C }}</td>
+						 <td>{{ item.item_D }}</td>
+						 <td>{{ item.item_weight }}</td>
+						 <td>{{ item.item_usage }}</td>
+						 <td>{{ item.item_rate }}</td>
+						 <td>{{ item.item_comment }}</td>
+                         <td><a href="/ERP/produce_statistics_pendai/{{ item.item_uuid }}/{{ target_user }}?operation=delete"><i class="fa fa-trash fa-lg"></i></a></td>
+				  </tr>
+			 {% endfor %}
+		   </tbody>
+		</table>
+	</div>
+	<div style="width:40%; margin:0 auto; margin-top:50px; margin-bottom:50px;">
+		{% if can_add_item_pendai %}
+			<a href="/ERP/produce_statistics_pendai/{{ target_user }}/" class="btn btn-primary" style="width:30%"> 添加 </a>
+		{% else %}
+			<a href="/ERP/produce_statistics_pendai/{{ target_user }}/" class="btn btn-primary" style="width:30%" disabled> 添加 </a>
+		{% endif %}
+		<a class="btn btn-primary" style="width:30%" href="/ERP/produce/chart/pendai/" target="_blank"> 生成折线图（月）</a>
+	    <a class="btn btn-primary" style="width:30%" href="/ERP/produce/chart_day/pendai/" target="_blank"> 生成折线图（日） </a>
+    </div>
+	
+	<div class="produce-statistics-list">
+		<table class="table" id="sortTable_1">
+		   <caption>辊剪生产统计表</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+                  <th>生产批次</th>
+				 <th>日期</th>
+				 <th>规格</th>
+				 <th>人员</th>
+				 <!-- <th>机器号</th> -->
+				 <th>合格</th>
+				 <th>不合格</th>
+				 <th>合格率</th>
+				 <th>备注</th>
+                  <th>操作</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data_gunjian %}
+					{% if item.item_rate < 0.6 %}
+					<tr class="danger">
+					{% elif item.item_rate < 0.8  %}
+					<tr class="warning">
+					{% else %}
+					<tr class="success">
+					{% endif %}
+						 <td>{{ item.no }}</td>
+                         <td><a href="/ERP/produce_statistics_gunjian/{{ item.item_uuid }}/{{ target_user }}">{{ item.item_id }}</a></td>
+						 <td>{{ item.produce_date }}</td>
+						 <td>{{ item.item_size }}</td>
+						 <td>{{ item.item_staff }}</td>
+						 <!-- <td>{{ item.item_machine }}</td> -->
+						 <td>{{ item.item_pass }}</td>
+						 <td>{{ item.item_fail }}</td>
+						 <td>{{ item.item_rate }}</td>
+						 <td>{{ item.item_comment }}</td>
+                         <td><a href="/ERP/produce_statistics_gunjian/{{ item.item_uuid }}/{{ target_user }}?operation=delete"><i class="fa fa-trash fa-lg"></i></a></td>
+				  </tr>
+			 {% endfor %}
+		   </tbody>
+		</table>
+	</div>
+	<div style="width:40%; margin:0 auto; margin-top:50px; margin-bottom:50px;">
+		{% if can_add_item_gunjian %}
+			<a href="/ERP/produce_statistics_gunjian/{{ target_user }}/" class="btn btn-primary" style="width:30%"> 添加 </a>
+		{% else %}
+			<a href="/ERP/produce_statistics_gunjian/{{ target_user }}/" class="btn btn-primary" style="width:30%" disabled> 添加 </a>
+		{% endif %}
+		<a class="btn btn-primary" style="width:30%" href="/ERP/produce/chart/gunjian/"  target="_blank"> 生成折线图（月） </a>
+	    <a class="btn btn-primary" style="width:30%" href="/ERP/produce/chart_day/gunjian/" target="_blank"> 生成折线图（日） </a>
+    </div>
+	
+	<div class="produce-statistics-list">
+		<table class="table" id="sortTable_2">
+		   <caption>铁芯生产统计表</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+                  <th>生产批次</th>
+				 <th>日期</th>
+				 <th>规格</th>
+				 <th>班组</th>
+				 <th>领料</th>
+				 <th>数量</th>
+				 <th>合格</th>
+				 <th>合格率</th>
+				 <th>备注</th>
+                  <th>操作</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data_texin %}
+					{% if item.item_rate < 0.6 %}
+					<tr class="danger">
+					{% elif item.item_rate < 0.8  %}
+					<tr class="warning">
+					{% else %}
+					<tr class="success">
+					{% endif %}
+						 <td>{{ item.no }}</td>
+                         <td><a href="/ERP/produce_statistics_tiexin/{{ item.item_uuid }}/{{ target_user }}/">{{ item.item_id }}</a></td>
+						 <td>{{ item.produce_date }}</td>
+						 <td>{{ item.item_size }}</td>
+						 <td>{{ item.item_staff }}</td>
+						 <td>{{ item.item_material }}</td>
+						 <td>{{ item.item_amount }}</td>
+						 <td>{{ item.item_pass }}</td>
+						 <td>{{ item.item_rate }}</td>
+						 <td>{{ item.item_comment }}</td>
+                         <td><a href="/ERP/produce_statistics_tiexin/{{ item.item_uuid }}/{{ target_user }}?operation=delete"><i class="fa fa-trash fa-lg"></i></a></td>
+				  </tr>
+			 {% endfor %}
+		   </tbody>
+		</table>
+	</div>
+	<div style="width:40%; margin:0 auto; margin-top:50px; margin-bottom:45px;">
+		{% if can_add_item_texin %}
+			<a href="/ERP/produce_statistics_tiexin/{{ target_user }}/" class="btn btn-primary" style="width:30%"> 添加 </a>
+		{% else %}
+			<a href="/ERP/produce_statistics_tiexin/{{ target_user }}/" class="btn btn-primary" style="width:30%" disabled> 添加 </a>
+		{% endif %}
+		<a class="btn btn-primary" style="width:30%" href="/ERP/produce/chart/tiexin/" target="_blank"> 生成折线图（月） </a>
+	    <a class="btn btn-primary" style="width:30%" href="/ERP/produce/chart_day/tiexin/" target="_blank"> 生成折线图（日） </a>
+    </div>
+</body>
+</html>

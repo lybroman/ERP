@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>CAPITALS - {{ target_user }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<!---script type="text/javascript" src="{% static "js/jquery-latest.js" %}"></script --->
+<script type="text/javascript" src="{% static "js/jquery.tablesorter.js" %}"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+tr:hover
+{
+	cursor:pointer;
+}
+</style>
+<script>
+$(document).ready(function(){
+	$("#sortTable").tablesorter();
+
+	$("tr").click(function(){
+		var tdArr = $(this).children();
+		for( var j = 0; j < tdArr.length; j++)
+		{
+			$(tdArr.eq(j).attr("key")).val(tdArr.eq(j).attr("data-src"))
+		}
+	})
+
+	$("#price").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#price").val()) || !re.test($("#amount").val()))
+			{
+				$("#total_price").val(-1)
+			}
+			else
+			{
+				$("#total_price").val(parseFloat($("#price").val()) * parseFloat($("#amount").val()))
+			}
+			
+		})
+		
+	$("#amount").change(function(evt){
+		var re = /^[0-9]+.?[0-9]*$/;
+		if (!re.test($("#price").val()) || !re.test($("#amount").val()))
+		{
+			$("#total").val(-1)
+		}
+		else
+		{
+			$("#total_price").val(parseFloat($("#price").val()) * parseFloat($("#amount").val()))
+		}
+		
+	})
+
+})
+</script>
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<script>
+$(document).ready(function(){
+	 var t0 = $('#sortTable').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 0, 'asc' ]]
+    } );
+
+    t0.on( 'order.dt search.dt', function () {
+        t0.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				    <li><a href="\ERP\storage_main\{{ target_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<table class="table" id="sortTable">
+		   <caption>固定资产</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+				 <th>分类</th>
+				 <th>品名规格</th>
+				 <th>价格</th>
+				 <th>数量</th>
+				 <th>总值</th>
+				 <th>最后录入时间</th>
+				 <th>地点</th>
+				 <th>备注</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data %}
+					<tr class="success item">
+						 <td key="#uuid" data-src= "{{ item.uuid }}">{{ item.No }}</td>
+						 <td key="#category" data-src="{{ item.category }}">{{ item.category }}</td>
+						 <td key="#size" data-src="{{ item.size }}">{{ item.size }}</td>
+						 <td key="#price" data-src="{{ item.price }}">{{ item.price }}</td>
+						 <td key="#amount" data-src="{{ item.amount }}">{{ item.amount }}</td>
+						 <td key="#total_price" data-src="{{ item.total_price }}">{{ item.total_price }}</td>
+						 <td key="#last_update_time" data-src="{{ item.last_update_time }}">{{ item.last_update_time }}</td>
+						 <td key="#place" data-src="{{ item.place }}">{{ item.place }}</td>
+						 <td key="#comment" data-src="{{ item.comment }}">{{ item.comment }}</td>
+				  </tr>
+			 {% endfor %}
+		   </tbody>
+		</table>
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="storage_capital" action="/ERP/storage/capital/{{ target_user }}/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display:none">
+				  <label for="name">uuid</label>
+				  <input type="text" class="form-control" name="uuid"  id="uuid"
+					 placeholder="uuid" value="">
+				</div>
+				<div class="form-group" style="display:none">
+				  <label for="target_user">target_user</label>
+				  <input type="text" class="form-control" name="target_user"  id="target_user"
+					 placeholder="target_user" value="{{ target_user }}">
+				</div>
+				<div class="form-group">
+				  <label for="name">分类</label>
+				  <input type="text" class="form-control" name="category" 
+					 placeholder="请输入分类" value="" id="category">
+			   </div>
+				<div class="form-group">
+				  <label for="name">品名规格</label>
+				  <input type="text" class="form-control" name="size" 
+					 placeholder="请输入品名规格" value="" id="size">
+			   </div>
+				<div class="form-group">
+				  <label for="name">价格</label>
+				  <input type="text" class="form-control" name="price" 
+					 placeholder="请输价格" value="" id="price">
+			   </div>
+				<div class="form-group">
+				  <label for="name">数量</label>
+				  <input type="text" class="form-control" name="amount" 
+					 placeholder="请输入数量" value="" id="amount">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">总值</label>
+				  <input type="text" class="form-control" name="total_price" 
+					 placeholder="请输入数量" value="" id="total_price" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">最后录入时间</label>
+				  <input type="date" class="form-control" name="last_update_time" 
+					 placeholder="请输入数量" value="" id="last_update_time">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">地点</label>
+				  <input type="text" class="form-control" name="place" 
+					 placeholder="请输入地点" value="" id="place">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">备注</label>
+				  <input type="text" class="form-control" name="comment" 
+					 placeholder="请输入备注" value="" id ="comment">
+			   </div>
+			   <br>
+			<button type="submit" class="btn btn-primary" name="operation" value="add">新增</button>
+			<button type="submit" class="btn btn-primary" name="operation" value="update">更新</button>
+		</form>
+	</div>
+
+</body>
+</html>

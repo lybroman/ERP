@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>Rank Home - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<script type="text/javascript" src="{% static "js/salesform.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="javascript">
+ 
+function AddElement(item){  
+	if (item == 'training')
+	{
+		alert('123')
+		var new_row = '<div class="form-group" style="width:22%; margin-left:2px"><input type="text" class="form-control" name="education" placeholder="培训时间" value="{{ education }}" ></div>' + 
+					  '<div class="form-group" style="width:22%; margin-left:2px"><input type="text" class="form-control" name="education" placeholder="培训导师" value="{{ education }}" ></div>' +
+					  '<div class="form-group" style="width:22%; margin-left:2px"><input type="text" class="form-control" name="education" placeholder="培训主题" value="{{ education }}" ></div>' +
+					  '<div class="form-group" style="width:22%; margin-left:2px"><input type="text" class="form-control" name="education" placeholder="培训效果" value="{{ education }}" ></div><br>'
+		$("#training").append(new_row)
+	}
+}  
+
+</script> 
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+
+				   <li><a href="#"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="sales_form" action="/ERP/employee_profile/{{ target_user }}/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display: none">
+				  <label for="name">target_user</label>
+				  <input type="text" class="form-control" name="target_user"  id="target_user"
+					 placeholder="target_user" value="{{ target_user }}">
+				</div>
+				<div class="sub-wrapper" style="text-align:center">
+			   <div class="form-group">
+				  <label for="name">工号</label>
+				  <input type="text" class="form-control" name="londerful_id" 
+					 placeholder="请输入工号" value="{{ londerful_id }}" required>
+			   </div>
+				<div class="form-group">
+				  <label for="name">部门</label>
+				  <input type="text" class="form-control" name="department" 
+					 placeholder="请输入部门" value="{{ department }}" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">岗位</label>
+				  <input type="text" class="form-control" name="job" 
+					 placeholder="请输入岗位" value="{{ job }}" required>
+			   </div>
+			   </div>
+				<div class="sub-wrapper">
+					 <div class="form-group">
+						 <label for="name">姓名</label>
+						 <input type="text" class="form-control" name="fullname" 
+						 placeholder="请输入姓名" value="{{ fullname }}" required>
+					 </div>
+					 <div class="form-group">
+					  <label for="name">性别</label><br>
+					  <select class="form-control" name="gender" required>
+						{% ifequal gender '男' %}
+						<option selected>男</option>
+						<option>女</option>
+						{% else %}
+						<option>男</option>
+						<option selected>女</option>
+						{% endifequal %}
+
+					</select>
+				     </div>
+				     <div class="form-group">
+					  <label for="name">民族</label>
+					  <input type="text" class="form-control" name="nationality" 
+						 placeholder="请输入岗位" value="{{ nationality }}" required>
+					</div>
+				</div>
+				<div class="sub-wrapper">
+					 <div class="form-group">
+						 <label for="name">出生日期</label>
+						 <input type="date" class="form-control" name="birthday" 
+						 placeholder="请输入出生日期" value="{{ birthday }}" required>
+					 </div>
+					 <div class="form-group">
+					  <label for="name">籍贯</label>
+					  <input type="text" class="form-control" name="birth_place" 
+						 placeholder="请输入籍贯" value="{{ birth_place }}" >
+				     </div>
+				     <div class="form-group">
+					  <label for="name">手机号码</label>
+					  <input type="text" class="form-control" name="mobile" 
+						 placeholder="请输入手机号码" value="{{ mobile }}" >
+					</div>
+					<div class="form-group">
+					  <label for="name">备用号码</label>
+					  <input type="text" class="form-control" name="backup_mobile" 
+						 placeholder="请输入备用号码" value="{{ backup_mobile }}" >
+					</div>
+					<div class="form-group">
+					  <label for="name">常用邮箱</label>
+					  <input type="text" class="form-control" name="email" 
+						 placeholder="请输入常用邮箱" value="{{ email }}" >
+					</div>
+					<div class="form-group">
+					  <label for="name">备用邮箱</label>
+					  <input type="text" class="form-control" name="backup_email" 
+						 placeholder="备用邮箱" value="{{ backup_email }}" >
+					</div>
+				</div>
+				<div class="sub-wrapper">
+					 <div class="form-group">
+						 <label for="name">进厂日期</label>
+						 <input type="date" class="form-control" name="on_board_time" 
+						 placeholder="请输入进场日期" value="{{ on_board_time }}" required>
+					 </div>
+					 <div class="form-group">
+					  <label for="name">合同签订日期</label>
+					  <input type="date" class="form-control" name="contract_start_time" 
+						 placeholder="请输入合同签订日期" value="{{ contract_start_time }}" required>
+				     </div>
+				     <div class="form-group">
+					  <label for="name">合同到期日期</label>
+					  <input type="date" class="form-control" name="contract_end_date" 
+						 placeholder="请输入合同到期日期" value="{{ contract_end_time }}" required>
+					</div>
+				</div>
+				<div class="sub-wrapper">
+					 <div class="form-group" style="width:90%">
+						 <label for="name">直属上级</label>
+						 <input type="text" class="form-control" name="first_level_manager" 
+						 placeholder="请输入直属上级" value="{{ first_level_manager }}" >
+					 </div>
+					 </br>
+					 <div class="form-group" style="width:90%">
+					  <label for="name">间接上属</label>
+					  <input type="text" class="form-control" name="second_level_manager" 
+						 placeholder="请输入间接上属" value="{{ second_level_manager }}" >
+				     </div>
+					  </br>
+				     <div class="form-group" style="width:90%">
+					  <label for="name">直属下级</label>
+					  <input type="text" class="form-control" name="direct_report" 
+						 placeholder="请输入直属下级" value="{{ direct_report }}" >
+					</div>
+				</div>
+				<div class="sub-wrapper">
+					 <div class="form-group" style="width:90%">
+						 <label for="name">身份证号码</label>
+						 <input type="text" class="form-control" name="identity" 
+						 placeholder="请输入身份证号码" value="{{ identity }}" >
+					 </div>
+					 </br>
+					 <div class="form-group" style="width:90%">
+					  <label for="name">地址</label>
+					  <input type="text" class="form-control" name="identity_address" 
+						 placeholder="请输入地址" value="{{ identity_address }}" >
+				     </div>
+				     <div class="form-group">
+					  <label for="name">是否缴纳五险一金</label>
+					  <input type="text" class="form-control" name="insurance" 
+						 placeholder="请输入直属下级" value="{{ insurance }}" >
+					</div>
+					<div class="form-group">
+					  <label for="name">缴纳日期</label>
+					  <input type="date" class="form-control" name="insurance_date" 
+						 placeholder="请输入缴纳日期" value="{{ insurance_date }}" required>
+					</div>
+				</div>
+				<div class="sub-wrapper">
+					 <div class="form-group">
+					  <label for="name">学历</label>
+					  <input type="text" class="form-control" name="education" 
+						 placeholder="请输入学历" value="{{ education }}" >
+				     </div>
+				     <div class="form-group">
+					  <label for="name">毕业院校</label>
+					  <input type="text" class="form-control" name="college" 
+						 placeholder="请输入毕业院校" value="{{ college }}" >
+					</div>
+					<div class="form-group">
+					  <label for="name">专业</label>
+					  <input type="text" class="form-control" name="major" 
+						 placeholder="请输入专业" value="{{ major }}" >
+					</div>
+					<div class="form-group">
+					  <label for="name">职称</label>
+					  <input type="text" class="form-control" name="level" 
+						 placeholder="请输入职称" value="{{ level }}" >
+					</div>
+					<div class="form-group">
+					  <label for="name">计算机水平</label>
+					  <input type="text" class="form-control" name="computer_skill" 
+						 placeholder="请输入计算机水平" value="{{ computer_skill }}" >
+					</div>
+					<div class="form-group">
+					  <label for="name">外语种类</label>
+					  <input type="text" class="form-control" name="foreign_language" 
+						 placeholder="请输入外语种类" value="{{ foreign_language }}" >
+					</div>
+					<div class="form-group">
+					  <label for="name">外语水平</label>
+					  <input type="text" class="form-control" name="foreign_language_level" 
+						 placeholder="请输入外语水平" value="{{ foreign_language_level }}" >
+					</div>
+				</div>
+				<div class="sub-wrapper">
+					<div class="form-group" id="training">
+						<div class="form-group">
+						  <label for="name">培训时间</label>
+						  <textarea type="text" class="form-control" name="time" 
+							 placeholder="请输入培训时间" style="height:300px">{{ time }}</textarea>
+						 </div>
+						 <div class="form-group">
+						  <label for="name">培训导师</label>
+						   <textarea type="text" class="form-control" name="tutor" 
+							 placeholder="请输入培训导师" style="height:300px">{{ tutor }}</textarea>
+						</div>
+						<div class="form-group">
+						  <label for="name">培训主题</label>
+						   <textarea type="text" class="form-control" name="topic" 
+							 placeholder="请输入培训主题" style="height:300px">{{ topic }}</textarea>
+						</div>
+						<div class="form-group">
+						  <label for="name">培训效果</label>
+						   <textarea type="text" class="form-control" name="result" 
+							 placeholder="请输入培训效果" style="height:300px">{{ result }}</textarea>
+						</div>
+						<br>
+					</div>
+				</div>
+				<div style="width:20%; margin:0 auto; margin-bottom: 10px">
+					<button type="submit" class="btn btn-primary" style="width:95%">提交</button>
+				</div>
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>PRODUCE STATISTICS List - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="{% static "js/jquery-latest.js" %}"></script>
+<script src="{% static "js/jquery.tablesorter.js" %}"></script>
+<script>
+$(document).ready(function(){
+	$("#sortTable").tablesorter();
+	
+	$("#item_pass").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#item_pass").val()) || !re.test($("#item_fail").val()))
+			{
+				$("#item_rate").val(-1)
+			}
+			else
+			{
+				$("#item_rate").val(parseFloat($("#item_pass").val()) / (parseFloat($("#item_pass").val()) + parseFloat($("#item_fail").val())))
+			}
+			
+		})
+		
+	$("#item_fail").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#item_pass").val()) || !re.test($("#item_fail").val()))
+			{
+				$("#item_rate").val(-1)
+			}
+			else
+			{
+				$("#item_rate").val(parseFloat($("#item_pass").val()) / (parseFloat($("#item_pass").val()) + parseFloat($("#item_fail").val())))
+			}
+			
+		})
+	
+})
+</script>
+</head>
+<body class="grey-scale">
+	<!--- div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="#Home"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="#Login"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div --->
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="produce_statistics_list" action="/ERP/sample_statistics_gunjian/{{ data.uuid }}/{{ target_user }}/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="form-group" style="display: None;">
+              <label for="name">uuid</label>
+              <input type="text" class="form-control" name="uuid"
+                 placeholder="uuid" value="{{ data.uuid }}" >
+            </div>
+			<h3>辊剪 样品</h3>
+            <div class="sub-wrapper">
+			    <div class="form-group">
+				  <label for="name">生产批次</label>
+				  <input type="text" class="form-control" name="item_id"
+					 placeholder="请输入生产批次" value="{{ data.item_id }}" >
+			    </div>
+                <div class="form-group">
+				  <label for="name"><a href="/ERP/produce_request_form/{{ data.target_user }}/{{ data.produce_uuid }}">生产单号</a></label>
+				  <input type="text" class="form-control" name="item_buyNo"
+					 placeholder="请输入生产单号" value="{{ data.item_buyNo }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="produce_date" 
+					 placeholder="请输入日期" value="{{ data.produce_date }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">规格/型号</label><br>
+				   <select class="form-control" name="item_size">
+						{% for nm in setting_size_unit_list %}
+						{% ifequal nm data.item_size %}
+						<option selected>{{ nm }}</option>
+						{% else %}
+						<option>{{ nm }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+			   </div>
+				<div class="form-group">
+				  <label for="name">原来的规格(仅供参考)</label>
+				  <input type="text" class="form-control" name=""
+					 placeholder="请输入规格" value="{{ data.item_size }}" readonly>
+			    </div>
+				<div class="form-group">
+				  <label for="name">人员</label>
+				  <input type="text" class="form-control" name="item_staff" 
+					 placeholder="请输入班组" value="{{ data.item_staff }}" >
+			    </div>
+				<div class="form-group" style="display: None;">
+				  <label for="name">机器号</label>
+				  <input type="text" class="form-control" name="item_machine" 
+					 placeholder="请输入机器号" value="{{ data.item_machine }}" >
+			    </div>
+				<br>
+				<div class="form-group">
+				  <label for="name">合格</label>
+				  <input type="text" class="form-control" name="item_pass" id="item_pass"
+					 placeholder="请输入合格" value="{{ data.item_pass }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">不合格</label>
+				  <input type="text" class="form-control" name="item_fail"  id ="item_fail"
+					 placeholder="请输入不合格" value="{{ data.item_fail }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">合格率</label>
+				  <input type="text" class="form-control" name="item_rate" id="item_rate"
+					 placeholder="请输入合格率" value="{{ data.item_rate }}" readonly>
+			    </div>
+				<div class="form-group">
+				  <label for="name">备注</label>
+				  <input type="text" class="form-control" name="item_comment" 
+					 placeholder="请输入备注" value="{{ data.item_comment }}" >
+			    </div>
+                <br><br>
+                <div class="form-group">
+				  <label for="name">原材料采购批次（多个批次请用英文分号“;”隔开）</label>
+                    {% for item in purchase_No_html %}
+                        <a href="/ERP/purchase/detail_uuid/{{ item.purchase_uuid }}/">{{ item.purchase_No }}</a> ;
+                    {% endfor %}
+                    <br>
+				  <input  class="form-control" name="purchase_Nos"
+                            value="{{ data.purchase_Nos }}">
+                  </input>
+
+			    </div>
+				<div style="width:5%; margin:0 auto; margin-top:50px;">
+					<button type="submit" class="btn btn-primary" style="width:100%">提交</button>
+				</div>
+			</div>
+	</div>
+</body>
+</html>

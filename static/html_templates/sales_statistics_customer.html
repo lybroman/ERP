@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>Statistics - {{ data.customer }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<script type="text/javascript" src="{% static "js/salesStatisticsCustomer.js" %}"></script>
+<!--- script type="text/javascript" src="{% static "js/jquery-latest.js" %}"></script --->
+<script type="text/javascript" src="{% static "js/jquery.tablesorter.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<script>
+$(document).ready(function(){
+    var t0 = $('#sortTable').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 2, 'none' ]]
+    } );
+
+    t0.on( 'order.dt search.dt', function () {
+        t0.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+$(function () {
+	var List = {{ data.orderAmoutSizeList|safe }};
+    $('#container-order').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '产品金额统计图'
+        },
+        xAxis: {
+            categories: List,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '金额'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f}#</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: ' 产品规格代号金额 ',
+            data: {{ data.orderAmoutBySize }}
+			}],
+		credits: {
+			enabled: false
+		}
+	});
+	});
+
+$(function () {
+    $('#container-trend').highcharts({
+        title: {
+            text: '产品金额统计',
+            x: -20 //center
+        },
+        xAxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        yAxis: {
+            title: {
+                text: ''
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: '#'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [{
+            name: '金额',
+            data: {{ data.orderAmountByMonth }}
+			}],
+		credits: {  
+			enabled: false  
+		}
+    });
+	});
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="\ERP\sales_main\{{ current_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<div id="customer" style="display:none" data-src="{{ data.customer }}"> 
+		</div>
+		<div class="sub-wrapper">
+			<table class="table" id="sortTable">
+			   <caption>{{ data.customer }}产品需求表</caption>
+			   <thead>
+				  <tr>
+					 <th>序号</th>
+					 <th>产品规格代号</th>
+                      <th>日期</th>
+					 <th>需求量</th>
+					 <th>单价</th>
+					 <th>金额</th>
+				  </tr>
+			   </thead>
+			   <tbody>
+				 {% for item in data.items %}
+					{% if forloop.last %}
+						<tr class="success">
+					{% else %}
+						<tr class="active">
+					{% endif %}
+						 <td>{{ item.index }}</td>
+						 <td><a href="/ERP/sales_statistics_customer/{{ data.customer }}/{{ item.size }}/{{ target_user }}">{{ item.size }}</a></td>
+						<td>{{ item.date }}</td>
+                         <td>{{ item.orderAmount }}</td>
+						 <td>{{ item.priceUnit }}</td>
+						 <td>{{ item.orderPrice }}</td>
+					</tr>
+				 {% endfor %}
+			   </tbody>
+			</table>
+		</div>
+		<div class="sub-wrapper">
+			<div class="form-group" style="width:10%">
+                {% ifequal target_size "None" %}
+                <form class="form-inline" role="form" id="sales_form" action="/ERP/sales_statistics_customer/{{ data.customer }}/{{ target_user }}/" enctype="multipart/form-data" method="post" target="_parent">
+                {% else %}
+                <form class="form-inline" role="form" id="sales_form" action="/ERP/sales_statistics_customer/{{ data.customer }}/{{ target_size }}/{{ target_user }}/" enctype="multipart/form-data" method="post" target="_parent">
+                {% endifequal %}
+                <div class="form-group" style="width:100%">
+                <label for="name">年份选择</label>
+                <select class="form-control" name="yearSelectedOrder" id="yearSelectedOrder">
+                    {% for year in data.years %}
+                        {% ifequal year data.selectedYear %}
+                            <option selected>{{ year }}</option>
+                        {% else %}
+                            <option>{{ year }}</option>
+                        {% endifequal %}
+                    {% endfor %}
+                </select>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">更新</button>
+                </form>
+			</div>
+			<div id="container-order" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+			<div id="container-trend" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+		</div>
+	</div>
+</body>
+</html>

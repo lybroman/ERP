@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>ERP -{{ data.customer_name }}详情</title>
+{% load static %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+tr:hover
+{
+	cursor:pointer;
+}
+</style>
+<script>
+$(document).ready(function(){
+	 var t = $('#table_id').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 1, 'asc' ]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+	
+	$("#unit_price").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#unit_price").val()) || !re.test($("#amount").val()))
+			{
+				$("#total_price").val(-1)
+			}
+			else
+			{
+				$("#total_price").val(parseFloat($("#unit_price").val()) * parseFloat($("#amount").val()))
+			}
+			
+		})
+		
+	$("#amount").change(function(evt){
+		var re = /^[0-9]+.?[0-9]*$/;
+		if (!re.test($("#unit_price").val()) || !re.test($("#amount").val()))
+		{
+			$("#total").val(-1)
+		}
+		else
+		{
+			$("#total_price").val(parseFloat($("#unit_price").val()) * parseFloat($("#amount").val()))
+		}
+		
+	})
+	
+	$("tr").click(function(){
+		var tdArr = $(this).children();
+		for( var j = 0; j < tdArr.length; j++)
+		{
+			$(tdArr.eq(j).attr("key")).val(tdArr.eq(j).attr("data-src"))
+		}
+	})
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="\ERP\sales_main\{{ target_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<div style="margin:0 auto; width:10%">
+			<h2>{{ data.customer_name }}</h2>
+		</div>
+		<form class="form-inline" role="form" id="sales_customer_archive" action="/ERP/sales_customer_archive?customer_aaa={{ data.customer_name }}" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display:none">
+				  <label for="name">target_user</label>
+				  <input type="text" class="form-control" name="target_user" 
+					 placeholder="" value="{{ target_user }}" id="target_user" required readonly>
+			   </div>
+				<div class="form-group">
+				  <label for="name">客户名称</label>
+				  <input type="text" class="form-control" name="customer_name" 
+					 placeholder="请输入客户名称" value="{{ data.customer_name }}" id="customer_name" required readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">地址</label>
+				  <input type="text" class="form-control" name="customer_address"
+					 placeholder="请输入地址" value="{{ data.customer_address }}" id="customer_address" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">主要联系人</label>
+				  <input type="text" class="form-control" name="customer_contact"
+					 placeholder="请输入联系人" value="{{ data.customer_contact }}" id="customer_contact" required>
+			   </div>
+                <div class="form-group">
+				  <label for="name">电话</label>
+				  <input type="text" class="form-control" name="customer_mobile"
+					 placeholder="请输入电话" value="{{ data.customer_mobile }}" id="customer_mobile" required>
+			   </div>
+				<div class="form-group">
+				  <label for="name">传真</label>
+				  <input type="text" class="form-control" name="customer_fax" 
+					 placeholder="请输入传真" value="{{ data.customer_fax }}" id="customer_fax" required>
+			   </div>
+			    <div class="form-group">
+				  <label for="name">邮件</label>
+				  <input type="text" class="form-control" name="customer_email" 
+					 placeholder="请输入邮件" value="{{ data.customer_email }}" id="customer_email" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">等级</label>
+				  <input type="text" class="form-control" name="customer_rank" 
+					 placeholder="请输入等级" value="{{ data.customer_rank }}" id ="customer_rank" required>
+			   </div>
+			   <br><br>
+                <div class="form-group">
+				  <label for="name">次要联系人</label>
+				  <input type="text" class="form-control" name="customer_contact2"
+					 placeholder="请输入联系人" value="{{ data.customer_contact2 }}" id="customer_contact2">
+			   </div>
+                <div class="form-group">
+				  <label for="name">电话</label>
+				  <input type="text" class="form-control" name="customer_mobile2"
+					 placeholder="请输入电话" value="{{ data.customer_mobile2 }}" id="customer_mobile2">
+			   </div>
+				<div class="form-group">
+				  <label for="name">传真</label>
+				  <input type="text" class="form-control" name="customer_fax2"
+					 placeholder="请输入传真" value="{{ data.customer_fax2 }}" id="customer_fax2">
+			   </div>
+			    <div class="form-group">
+				  <label for="name">邮件</label>
+				  <input type="text" class="form-control" name="customer_email2"
+					 placeholder="请输入邮件" value="{{ data.customer_email2 }}" id="customer_email2">
+			   </div>
+                <br><br>
+			    <div class="form-group" style="width:90%" >
+				  <label for="name">其他信息</label>
+				  <textarea class="form-control" name="customer_backup" rows="3" placeholder="请输入其他信息" id ="customer_backup">{{ data.customer_backup }}
+				  </textarea>
+			   </div>
+			   <br><br>
+			   <div class="form-group" style="width:90%" >
+				  <label for="name">备注</label>
+				  <textarea class="form-control" name="customer_comment" rows="3" placeholder="请输入备注" id ="customer_comment">{{ data.customer_comment }}
+				  </textarea>
+			   </div>
+			   <br><br>
+			 <div style="margin:0 auto; width:20%">
+			<button type="submit" class="btn btn-primary" name="operation" value="update" style="width:100%">更新</button>
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>

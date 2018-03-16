@@ -1,0 +1,88 @@
+@font-face
+{
+font-family: Cabin-Bold;
+src: url(../fonts/Cabin-Bold.otf);
+}
+
+@font-face
+{
+	font-family: Raleway;
+	src:url(../fonts/raleway.ttf)
+}
+html
+{
+	background-color:#DDDDDD !important;
+}
+div.content-wrapper
+{
+	margin-left:18%;
+	width:82%;
+	min-height:100%;
+	padding-left:3%;
+	padding-right:3%;
+	background-color:#DDDDDD !important;
+	padding-top:1px;
+	height:100%;
+}
+.clearfix:after 
+{
+	content:"Dummy Block"; 
+	display:block; 
+	height:0; 
+	visibility:hidden; 
+	clear:both;
+} 
+div.auto_extend
+{
+	height:auto;
+	padding-bottom: 5%;
+}
+ul.subversion-nav-tab
+{
+	margin-top:50px;
+	list-style:none;
+}
+.alive
+{
+	opacity:1.0;
+}
+
+.dead
+{
+	background-color: rgba(255, 0, 0, 0.5);
+}
+ul.subversion-nav-tab li
+{
+	
+	display:inline-block;
+	text-align:center;
+	width:20%;
+	height:auto;
+	font-size:14px;
+	line-height:35px;
+	margin-left:25px;
+	margin-top:25px;
+	background-color: white;
+	opacity:0.3;
+	border-radius: 4px;
+	box-shadow: 4px 4px 5px 1px rgba(0, 0, 0, 0.3);
+	transition: all 0.7s;
+	-webkit-transition: all 0.7s;
+	cursor:pointer;
+}
+ul.subversion-nav-tab li a
+{
+	text-decoration:none;
+}
+ul.subversion-nav-tab li:hover
+{
+	-webkit-box-shadow:0 0 10px #0CC;  
+	box-shadow:0 0 10px #0CC; 
+	opacity:1.0;
+}
+
+div.subersion-tab-wrapper li.active
+{
+	background-color:white;
+	opacity:1.0;
+}

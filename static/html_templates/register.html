@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>ERP-REGISTER</title>
+{% load static %}
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{% static "js/login.js" %}"></script>
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,600,700,800,900' rel='stylesheet' type='text/css'>
+</head>
+<body class="grey-scale">
+	<div class="register-wrapper">
+		<form action="/ERP/register/" enctype="multipart/form-data" method="post" target="_parent">
+				<h4 style="text-align:center">
+				新用户注册	
+				</h4><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">用户名</span>
+					<input type="text" class="form-control" id="username" placeholder="e.g. guest" name="username">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">密码</span>
+					<input type="password" class="form-control" id="password" placeholder="e.g. guest123" name="password">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">密码确认</span>
+					<input type="password" class="form-control" id="password_again" placeholder="e.g. guest123" name="password_again">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">名字</span>
+					<input type="text" class="form-control" id="first_name" placeholder="e.g. 育博" name="first_name">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">姓氏</span>
+					<input type="text" class="form-control" id="last_name" placeholder="e.g. 李" name="last_name">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">邮箱(londerful)</span>
+					<input type="text" class="form-control" id="email_address" placeholder="e.g. def@abc.com" name="email_address">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">备用邮箱</span>
+					<input type="text" class="form-control" id="backup_email" placeholder="e.g. fed@bca.com" name="backup_email">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">电话(londerful)</span>
+					<input type="text" class="form-control" id="email_address" placeholder="e.g. 123-5678" name="mobile">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">备用电话</span>
+					<input type="text" class="form-control" id="backup_email" placeholder="e.g. 139188xxxx" name="backup_mobile">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">住址</span>
+					<input type="text" class="form-control" id="backup_email" placeholder="e.g. 139188xxxx" name="address">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">生日</span>
+					<input type="date" class="form-control" id="backup_email" placeholder="" name="birthday">
+				</div><br>
+				<div class="input-group h-center">
+					<span class="input-group-addon">身份证号</span>
+					<input type="text" class="form-control" id="backup_email" placeholder="e.g. 310xxxxxxxxxx" name="identity">
+				</div><br>
+				<div class="form-group">
+				  <label for="name">头像上传(推荐大小: 300x300)</label>
+				  <div class="input-group">
+					<input type="file" multiple class="form-control" name = "profile_image">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="profile_image">
+							<i class="fa fa-download fa-lg"></i>
+						</button>
+					</span>
+				  </div>
+			   </div>
+				<button class="btn btn-primary" type="submit" name="register" value="register">
+						 REGISTER
+				</button>	
+		</form>
+	</div>
+	
+</body>
+</html>

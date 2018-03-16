@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>PRODUCE STATISTICS List - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="{% static "js/jquery-latest.js" %}"></script>
+<script src="{% static "js/jquery.tablesorter.js" %}"></script>
+<script>
+$(document).ready(function(){
+	$("#sortTable").tablesorter();
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="#Home"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="#Login"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="produce_statistics_list" action="/ERP/produce_statistics_pendai/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+			    <div class="form-group">
+				  <label for="name">序号</label>
+				  <input type="text" class="form-control" name="no" 
+					 placeholder="请输入序号" value="{{ data.no }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="produce_date" 
+					 placeholder="请输入日期" value="{{ data.produce_date }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">规格</label>
+				  <input type="text" class="form-control" name="item_size" 
+					 placeholder="请输入规格" value="{{ data.item_size }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">班组</label>
+				  <input type="text" class="form-control" name="item_class"
+					 placeholder="请输入班组" value="{{ data.item_size }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">炉号</label>
+				  <input type="text" class="form-control" name="item_size" 
+					 placeholder="请输入炉号" value="{{ data.item_size }}" >
+			    </div>
+				<br>
+				<div class="form-group">
+				  <label for="name">A</label>
+				  <input type="text" class="form-control" name="item_A" 
+					 placeholder="请输入A" value="{{ data.item_A }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">B</label>
+				  <input type="text" class="form-control" name="item_B" 
+					 placeholder="请输入B" value="{{ data.item_B }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">C</label>
+				  <input type="text" class="form-control" name="item_C" 
+					 placeholder="请输入C" value="{{ data.item_C }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">D</label>
+				  <input type="text" class="form-control" name="item_D" 
+					 placeholder="请输入D" value="{{ data.item_D }}" >
+			    </div>
+				<br>
+				<div class="form-group">
+				  <label for="name">重量</label>
+				  <input type="text" class="form-control" name="item_weight" 
+					 placeholder="请输入重量" value="{{ data.item_weight }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">合母金使用情况</label>
+				  <input type="text" class="form-control" name="item_usage" 
+					 placeholder="请输入合母金使用情况" value="{{ data.item_usage }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">合格率</label>
+				  <input type="text" class="form-control" name="item_rate" 
+					 placeholder="请输入合格率" value="{{ data.item_rate }}" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">备注</label>
+				  <input type="text" class="form-control" name="item_comment" 
+					 placeholder="请输入备注" value="{{ data.item_comment }}" >
+			    </div>
+				<div style="width:5%; margin:0 auto; margin-top:50px;">
+					<button type="submit" class="btn btn-primary" style="width:100%">添加</button>
+				</div>
+			</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>Message Box - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<script type="text/javascript" src="{% static "js/salesform.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<script>
+$(document).ready(function(){
+ var t = $('#table_id').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 1, 'asc' ]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="\ERP\login\" target="_parent"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<table class="table" id="table_id">			
+		   <caption>{{ request.user.last_name }}{{ request.user.first_name }}的消息</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+				 <th>主题</th>
+				 <th>产品类别</th>
+				 <th>申请日期</th>
+				 <th>截止日期</th>
+				 <th>申请人</th>
+				 <th>状态</th>
+				 <th>采购状态</th>
+				 <th>时限</th>
+				 <th>最后更新</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data %}
+				 {% ifequal item.status "RE" %}
+					 {% if item.duration < 3 %}
+						<tr class="danger">
+					 {% else %}
+						<tr class="info">
+					 {% endif %}
+				 {% endifequal %}
+				 {% ifequal item.status "CO" %}
+					{% if item.duration < 3 %}
+						<tr class="danger">
+					{% else %}
+						<tr class="success">
+					{% endif %}
+				 {% endifequal %}
+				 {% ifequal item.status "NE" %}
+				 {% if item.duration < 3 %}
+						<tr class="danger">
+					{% else %}
+						<tr class="warning">
+					{% endif %}
+				 {% endifequal %}
+					 <td>{{ item.index }}</td>
+					 <td><a id="index" data-src="{{ item.uuid }}" href="/ERP/request/{{ item.uuid }}">{{ item.title }}</a></td>
+					 <td>{{ item.category }}</td>
+					 <td>{{ item.date }}</td>
+					 <td>{{ item.due_date }}</td>
+					 <td>{{ item.applicant }}</td>
+					 {% ifequal item.status "RE" %}
+					 <td>已批准</td>
+					 {% endifequal %}
+					 {% ifequal item.status "CO" %}
+					 <td>采购流程</td>
+					 {% endifequal %}
+					 {% ifequal item.status "NE" %}
+					 <td>待审批</td>
+					 {% endifequal %}
+                     {% ifequal item.status "NO" %}
+					 <td>已拒绝</td>
+					 {% endifequal %}
+					 <td>{{ item.purchase_state }}</td>
+					 <td>{{ item.duration }}</td>
+					 <td>{{ item.update_date }}</td>
+				</tr>
+			 {% endfor %}
+		   </tbody>
+		</table>
+	</div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>Rank Home - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<script type="text/javascript" src="{% static "js/salesform.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+
+				   <li><a href="#"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="sales_form" action="/ERP/hr_rank_overview/{{ target_user }}/{{ rank_uuid }}/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display: none">
+				  <label for="name">rank_uuid</label>
+				  <input type="text" class="form-control" name="rank_uuid"  id="rank_uuid"
+					 placeholder="rank_uuid" value="{{ rank_uuid }}">
+				</div>
+				<div class="form-group" style="display: none">
+				  <label for="name">target_user</label>
+				  <input type="text" class="form-control" name="target_user"  id="target_user"
+					 placeholder="target_user" value="{{ target_user }}">
+				</div>
+				<div class="sub-wrapper" style="text-align:center">
+			   <div class="form-group">
+				  <label for="name">当前评价月度</label>
+				  <input type="date" class="form-control" name="date_for" 
+					 placeholder="请输入日期" value="{{ date_for }}" required>
+			   </div>
+				<div class="form-group">
+				  <label for="name">评分</label>
+				  <input type="text" class="form-control" name="score" 
+					 placeholder="请输入评分" value="{{ score }}" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">评价人</label>
+				  <input type="text" class="form-control" name="ranker" 
+					 placeholder="请输入评价人" value="{{ user.username }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">更新时间</label>
+				  <input type="date" class="form-control" name="update_date" 
+					 placeholder="请输入更新时间" value="{{ update_date }}" readonly>
+			   </div>
+			   </div>
+				<div class="sub-wrapper" style="text-align:center">
+				   <div class="form-group" style="width:95%">
+					<label for="name">评价</label>
+					<textarea class="form-control" rows="15" name="comment" required>{{ comment }}</textarea>
+				  </div>
+				</div>
+				<div style="width:20%; margin:0 auto; margin-bottom: 10px">
+					<button type="submit" class="btn btn-primary" style="width:95%">提交</button>
+				</div>
+		</form>
+	</div>
+</body>
+</html>

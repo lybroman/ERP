@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>CHART - {{ data.category_name }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<style>
+</style>
+<script>
+$(document).ready(function(){
+	$('#container').highcharts({
+        title: {
+            text: '{{ data.category_name }} 日期-合格产品数量-合格等级-班组/人员-规格',
+            x: -20 //center
+        },
+        subtitle: {
+            text: 'Londerful Database Engine',
+            x: -20
+        },
+        xAxis: {
+            categories: {{ data.date_range|safe }}
+        },
+        yAxis: {
+            title: {
+                text: '合格产品数量 '
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [
+		{% for data in data.data_list %}
+		{% if forloop.last %}
+		{
+            name: "{{ data.tag }}",
+            data: {{ data.data|safe }}
+        }
+		{% else %}
+		{
+            name: "{{ data.tag }}",
+            data: {{ data.data|safe }}
+        },
+		{% endif %}
+		{% endfor %}
+		],
+		credits: {  
+			enabled: false  
+		} 
+    });
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				    <li><a href="\ERP\storage_main\{{ target_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="sub-wrapper" style="width:80%; margin: 0 auto;">
+		<div class="form-group" style="width:10%">
+			<form class="form-inline" role="form" action="/ERP/produce/chart_day/{{ data.category }}/" enctype="multipart/form-data" method="post" target="_parent">
+				<div class="form-group" style="width:800px">
+					<label for="name">查询年月</label>
+					<input type="date" class="form-control" name="startDate"
+					 placeholder="请输入查询年月" value="{{ data.date_start }}" style="width:200px">
+
+					<label for="name">合格等级</label>
+					<select class="form-control" name="selection">
+						{% for it in data.it %}
+						{% ifequal it data.selected %}
+						<option selected>{{ it }}</option>
+						{% else %}
+						<option>{{ it }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+
+                    <label for="name">班组/人员</label>
+					<select class="form-control" name="selection_banzu">
+						{% for banzu in data.banzu %}
+						{% ifequal banzu data.selected_banzu %}
+						<option selected>{{ banzu }}</option>
+						{% else %}
+						<option>{{ banzu }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+
+                    <br><br>
+
+                    <label for="name">规格</label>
+					<select class="form-control" name="selection_guige">
+						{% for guige in data.guige %}
+						{% ifequal guige data.selected_guige %}
+						<option selected>{{ guige }}</option>
+						{% else %}
+						<option>{{ guige }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+
+					<button type="submit" class="btn btn-primary" style="display:inline-block ; margin-left:20px">更新</button>
+				</div>
+			</form>
+		</div>
+		<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+	</div>
+</body>
+</html>

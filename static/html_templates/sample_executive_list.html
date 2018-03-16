@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>PRODUCE Executive List - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="{% static "js/jquery-latest.js" %}"></script>
+<script src="{% static "js/jquery.tablesorter.js" %}"></script>
+<script>
+$(document).ready(function(){
+$("#sortTable").tablesorter();
+
+$("#adjust-request").click(function(){
+			var trs = $("#sortTable tbody").children()
+			var data = {}
+			data["info"] = {}
+			for(var i = 0; i < trs.length; i++)
+			{
+				var tds =  trs.eq(i).children()
+				data["info"][i] = {}
+				for(var j = 0; j < tds.length; j++)
+				{
+					data["info"][i][tds.eq(j).attr("tag")] = tds.eq(j).attr("data-src")
+				}
+
+			}
+
+			data["approver"] = $("#approver option:selected").text()
+			alert(JSON.stringify(data))
+			$.ajax({
+				   type: "POST",
+				   url: "/ERP/adjust_sequence/",
+				   contentType:"application/json",
+				   data: JSON.stringify({"data":data}),
+				   dataType:"json",
+				   //async: false,
+				   success: function(data){
+						alert(JSON.stringify(data))
+				   },
+				   error: function(msg){
+						alert("Request failed!")
+				   }
+			});
+		})
+})
+
+$(function(){
+  $('.move_btn').click(function(){
+    var move_act = $(this).attr('move_act');
+    $('#sortTable tbody tr').removeClass('move');
+    if(move_act == 'up'){
+      $(this).parent().parent('tr').addClass('move')
+             .prev().before($(this).parent().parent('tr'));
+    }
+    else if(move_act == 'down'){
+      $(this).parent().parent('tr').addClass('move')
+             .next().after($(this).parent().parent('tr'));
+    }
+    setTimeout("$('#sortTable tbody tr').removeClass('move');", 2000);
+  });
+ })
+
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="/ERP/produce_main/{{ target_user }}/"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="/ERP/login/"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="/ERP/logout/"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="/ERP/message/"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="/ERP/request/"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="fixed-left-nav">
+		<h4>E R P</h4>
+		<img class="logo-img" src="{% static "imgs/londerful_logo.png" %}"/>
+	</div>
+
+	<div class="sales-executive-list">
+		<table class="table" id="sortTable">
+		   <caption>样品执行表</caption>
+		   <thead>
+			  <tr>
+				 <th>序号</th>
+                  <th>样品/生产</th>
+                  <th>生产单号</th>
+				 <th>日期</th>
+				 <th>客户名称／代号</th>
+				 <th>产品类别</th>
+				 <th>数量</th>
+				 <th>生产状态</th>
+				 <th>需求状态</th>
+				 <th>备注</th>
+				 <th>操作</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data %}
+					{% ifequal item.statement "重要" %}
+					<tr class="danger">
+					{% else %}
+					<tr class="success">
+					{% endifequal %}
+						 <td>{{ item.no }}</td>
+                         <td>{{ item.is_sample_form }}</td>
+			             <td tag="uuid" data-src="{{ item.message_id }}"><a id="index" href="/ERP/produce_request_form/{{ target_user }}/{{ item.message_id }}">{{ item.index }}</a></td>
+                         <td>{{ item.submit_date }}</td>
+						 <td>{{ item.customer }}</td>
+						 <td>{{ item.category }}</td>
+						 <td>{{ item.amount }}</td>
+						 <td>{{ item.produce_status }}</td>
+						 <td>{{ item.statement }}</td>
+						 <td>{{ item.comment }}</td>
+						 <td><span class="move_btn" move_act="up" style="padding-right:5px"><i class="fa fa-arrow-circle-up fa-lg"></i></span><span class="move_btn" move_act="down"><i class="fa fa-arrow-circle-down fa-lg"></i></span></td>
+				  </tr>
+			 {% endfor %}
+		   </tbody>
+		</table>
+		<div class="form-group" style="width:15%;" style="display:inline-block !important">
+			<label for="name">批准人</label>
+			<select class="form-control" name="approver" id="approver">
+				{% for approver in approver_list %}
+					<option>{{ approver }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div style="width:10%; margin:0 auto;">
+			{% if is_produce_manager %}
+			<a id="adjust-request" class="btn btn-danger">申请调序</a>
+			{% else %}
+			<a id="adjust-request" class="btn btn-danger" disabled>申请调序</a>
+			{% endif %}
+		</div>
+	</div>
+
+</body>
+</html>

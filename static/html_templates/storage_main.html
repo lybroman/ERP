@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+{% load static %}
+{% load staticfiles %}
+<title>STORAGE - {{ user.username}}</title>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet", type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<script>
+$(document).ready(function(){
+$("#source").click(function(evt){
+	$(".item").hide()
+    $(".item_in").hide()
+    $(".item_out").hide()
+	$(".source").show()
+    $(".delivery").hide()
+    $(".source_out").hide()
+    $(".source_in").hide()
+})
+$("#item").click(function(evt){
+	$(".source").hide()
+    $(".item_in").hide()
+    $(".item_out").hide()
+	$(".item").show()
+    $(".delivery").hide()
+    $(".source_out").hide()
+    $(".source_in").hide()
+})
+$("#item_in").click(function(evt){
+	$(".source").hide()
+    $(".item_in").show()
+    $(".item_out").hide()
+	$(".item").hide()
+    $(".delivery").hide()
+    $(".source_out").hide()
+    $(".source_in").hide()
+})
+$("#item_out").click(function(evt){
+	$(".source").hide()
+    $(".item_in").hide()
+    $(".item_out").show()
+	$(".item").hide()
+    $(".delivery").hide()
+    $(".source_out").hide()
+    $(".source_in").hide()
+})
+$("#delivery").click(function(evt){
+	$(".source").hide()
+    $(".item_in").hide()
+    $(".item_out").hide()
+	$(".item").hide()
+    $(".delivery").show()
+    $(".source_out").hide()
+    $(".source_in").hide()
+})
+$("#source_out").click(function(evt){
+	$(".source").hide()
+    $(".item_in").hide()
+    $(".item_out").hide()
+	$(".item").hide()
+    $(".delivery").hide()
+    $(".source_out").show()
+    $(".source_in").hide()
+})
+$("#source_in").click(function(evt){
+	$(".source").hide()
+    $(".item_in").hide()
+    $(".item_out").hide()
+	$(".item").hide()
+    $(".delivery").hide()
+    $(".source_out").hide()
+    $(".source_in").show()
+})
+})
+</script>
+<body>
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="/ERP/storage_main/{{ target_user }}/"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	
+	<div class="fixed-left-nav" style="overflow:auto">
+		<h4>E R P</h4>
+		<img class="logo-img" src="{% static "imgs/londerful_logo.png" %}"/>
+		<div class="nav-list">
+			<a id="source">原料库存</a>
+			<a id="item">成品库存</a>
+			<a href="/ERP/storage/capital/{{ user.username }}/">固定资产</a>
+			<a id="delivery">物流</a>
+			<a href="/ERP/storage/check/{{ user.username }}/">盘点</a>
+			<a id="item_in">成品入库记录</a>
+			<a id="item_out">成品出库记录</a>
+			<a id="source_in">原料入库记录</a>
+			<a id="source_out">原料出库记录</a>
+		</div>
+	</div>
+	<div class="content-wrapper source">
+        <h2> - 原料库存 - </h2>
+		<div class="item-content" data-src="produce_storage_mudai" onclick="window.open('/ERP/storage_source/母合金/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 母合金 库存 - </h5>
+		</div>
+		<div class="item-content" data-src="produce_storage_chengpin" onclick="window.open('/ERP/storage_source/耐火材料/')">
+			<img src="{% static "imgs/chengpin.jpg" %}"/>
+			<h5> - 耐火材料 库存 - </h5>
+		</div>
+		<div class="item-content" data-src="produce_storage_texin" onclick="window.open('/ERP/storage_source/辅助材料/')">
+			<img src="{% static "imgs/tiexin.jpg" %}"/>
+			<h5> - 辅助材料 库存 - </h5>
+		</div>
+		<div class="item-content" data-src="produce_storage_texin" onclick="window.open('/ERP/storage_source/护盒/')">
+			<img src="{% static "imgs/tiexin.jpg" %}"/>
+			<h5> - 护盒 库存 - </h5>
+		</div>
+        <div class="item-content" data-src="produce_storage_texin" onclick="window.open('/ERP/storage_source/五金电器/')">
+			<img src="{% static "imgs/tiexin.jpg" %}"/>
+			<h5> - 五金电器 库存 - </h5>
+		</div>
+        <div class="item-content" data-src="produce_storage_texin" onclick="window.open('/ERP/storage_source_threshold/{{ target_user }}/')">
+			<img src="{% static "imgs/threshold.jpg" %}"/>
+			<h5> - 调整原料预警值 - </h5>
+		</div>
+	</div>
+	<div class="content-wrapper item" style="display:none">
+        <h2> - 成品库存 - </h2>
+		<div class="item-content" data-src="storage_item_mudai" onclick="window.open('/ERP/storage_item_mudai/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 母带 库存 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_gunjian" onclick="window.open('/ERP/storage_item_gunjian/')">
+			<img src="{% static "imgs/chengpin.jpg" %}"/>
+			<h5> - 辊剪 库存 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_tiexin" onclick="window.open('/ERP/storage_item_tiexin/')">
+			<img src="{% static "imgs/tiexin.jpg" %}"/>
+			<h5> - 铁芯 库存 - </h5>
+		</div>
+        <div class="item-content" data-src="produce_storage_texin" onclick="window.open('/ERP/storage_item_threshold/{{ target_user }}/')">
+			<img src="{% static "imgs/threshold.jpg" %}"/>
+			<h5> - 调整成品预警值 - </h5>
+		</div>
+	</div>
+    <div class="content-wrapper delivery" style="display:none">
+        <h2> - 物流记录 - </h2>
+		<div class="item-content" data-src="storage_item_mudai" onclick="window.open('/ERP/storage/delivery/母带/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 母带 物流记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_gunjian" onclick="window.open('/ERP/storage/delivery/辊剪/{{ user.username }}/')">
+			<img src="{% static "imgs/chengpin.jpg" %}"/>
+			<h5> - 辊剪 物流记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_texin" onclick="window.open('/ERP/storage/delivery/铁芯/{{ user.username }}/')">
+			<img src="{% static "imgs/tiexin.jpg" %}"/>
+			<h5> - 铁芯 物流记录 - </h5>
+		</div>
+        <div class="item-content" data-src="storage_item_all" onclick="window.open('/ERP/storage/delivery/全部/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 全部 物流记录 - </h5>
+		</div>
+	</div>
+    <div class="content-wrapper item_in" style="display:none">
+        <h2> - 成品入库记录 - </h2>
+		<div class="item-content" data-src="storage_item_mudai" onclick="window.open('/ERP/storage/product_in/母带/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 母带 入库记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_gunjian" onclick="window.open('/ERP/storage/product_in/辊剪/{{ user.username }}/')">
+			<img src="{% static "imgs/chengpin.jpg" %}"/>
+			<h5> - 辊剪 入库记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_texin" onclick="window.open('/ERP/storage/product_in/铁芯/{{ user.username }}/')">
+			<img src="{% static "imgs/tiexin.jpg" %}"/>
+			<h5> - 铁芯 入库记录 - </h5>
+		</div>
+        <div class="item-content" data-src="storage_item_all" onclick="window.open('/ERP/storage/product_in/全部/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 全部 入库记录 - </h5>
+		</div>
+	</div>
+    <div class="content-wrapper item_out" style="display:none">
+        <h2> - 成品出库记录 - </h2>
+		<div class="item-content" data-src="storage_item_mudai" onclick="window.open('/ERP/storage/product_out/母带/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 母带 出库记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_gunjian" onclick="window.open('/ERP/storage/product_out/辊剪/{{ user.username }}/')">
+			<img src="{% static "imgs/chengpin.jpg" %}"/>
+			<h5> - 辊剪 出库记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_texin" onclick="window.open('/ERP/storage/product_out/铁芯/{{ user.username }}/')">
+			<img src="{% static "imgs/tiexin.jpg" %}"/>
+			<h5> - 铁芯 出库记录 - </h5>
+		</div>
+        <div class="item-content" data-src="storage_item_all" onclick="window.open('/ERP/storage/product_out/全部/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 全部 出库记录 - </h5>
+		</div>
+	</div>
+    <div class="content-wrapper source_in" style="display:none">
+        <h2> - 原料入库记录 - </h2>
+		<div class="item-content" data-src="storage_item_mudai" onclick="window.open('/ERP/storage/source_in/母合金/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 母合金 入库记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_gunjian" onclick="window.open('/ERP/storage/source_in/耐火材料/{{ user.username }}/')">
+			<img src="{% static "imgs/chengpin.jpg" %}"/>
+			<h5> - 耐火材料 入库记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_texin" onclick="window.open('/ERP/storage/source_in/辅助材料/{{ user.username }}/')">
+			<img src="{% static "imgs/tiexin.jpg" %}"/>
+			<h5> - 辅助材料 入库记录 - </h5>
+		</div>
+        <div class="item-content" data-src="storage_item_all" onclick="window.open('/ERP/storage/source_in/护盒/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 护盒 入库记录 - </h5>
+		</div>
+        <div class="item-content" data-src="storage_item_all" onclick="window.open('/ERP/storage/source_in/五金电器/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 五金电器 入库记录 - </h5>
+		</div>
+        <div class="item-content" data-src="storage_item_all" onclick="window.open('/ERP/storage/source_in/全部/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 全部 入库记录 - </h5>
+		</div>
+	</div>
+    <div class="content-wrapper source_out" style="display:none">
+        <h2> - 原料出库记录 - </h2>
+		<div class="item-content" data-src="storage_item_mudai" onclick="window.open('/ERP/storage/source_out/母合金/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 母合金 出库记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_gunjian" onclick="window.open('/ERP/storage/source_out/耐火材料/{{ user.username }}/')">
+			<img src="{% static "imgs/chengpin.jpg" %}"/>
+			<h5> - 耐火材料 出库记录 - </h5>
+		</div>
+		<div class="item-content" data-src="storage_item_texin" onclick="window.open('/ERP/storage/source_out/辅助材料/{{ user.username }}/')">
+			<img src="{% static "imgs/tiexin.jpg" %}"/>
+			<h5> - 辅助材料 出库记录 - </h5>
+		</div>
+        <div class="item-content" data-src="storage_item_all" onclick="window.open('/ERP/storage/source_out/护盒/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 护盒 出库记录 - </h5>
+		</div>
+        <div class="item-content" data-src="storage_item_all" onclick="window.open('/ERP/storage/source_out/五金电器/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 五金电器 出库记录 - </h5>
+		</div>
+        <div class="item-content" data-src="storage_item_all" onclick="window.open('/ERP/storage/source_out/全部/{{ user.username }}/')">
+			<img src="{% static "imgs/mudai.jpg" %}"/>
+			<h5> - 全部 出库记录 - </h5>
+		</div>
+	</div>
+</body>
+</html>

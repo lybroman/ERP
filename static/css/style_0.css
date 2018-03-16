@@ -1,0 +1,127 @@
+@font-face
+{
+font-family: Cabin-Bold;
+src: url(../fonts/Cabin-Bold.otf);
+}
+/*--set default value-*/
+body, html, div, p, h1, h2, h3, h4, i
+{
+	font-family: Cabin-Bold;
+}
+
+.grey-scale
+{
+	background-color:#DDDDDD
+}
+caption
+{
+	font-family: Cabin-Bold;
+	font-size:1.5em;
+}
+.spacer
+{
+	padding-right:10px;
+}
+
+div.fixed-left-nav
+{
+	position:fixed;
+	min-width:18%;
+	max-width:18%;
+	width:18%;
+	height:100%;
+	background-color:white;
+	box-shadow: 2px 0px 5px 1px rgba(0, 0, 0, 0.1);
+	-webkit-transition:all 0.9s;
+	transition:all 0.9s;
+	left:0px;
+	top:0px;
+}
+
+div.fixed-left-nav:hover
+{
+	box-shadow: 2px 0px 5px 1px #888888;
+}
+
+div.fixed-left-nav .nav-list
+{
+	width:100%;
+	height:auto;
+	text-align:center
+}
+
+div.fixed-left-nav .nav-list a 
+{
+	font-family: 'Cabin-Bold' !important;
+	display:block;
+	width:55%;
+	margin:0 auto;
+	margin-top: 10%;
+	line-height: 40px;
+	font-size:15px;
+	text-decoration:none;
+	color:#000000; 
+	border:1.5px solid #dadada;
+	transition: all 0.7s;
+	-webkit-transition:all 0.7s;
+}
+
+
+div.fixed-left-nav .nav-list a:hover
+{
+	cursor:pointer;
+	-webkit-box-shadow:0 0 10px #0CC;  
+	box-shadow:0 0 10px #0CC; 
+}
+
+img.logo-img
+{
+	width:80%;
+	height:auto;
+	display:block;
+	margin: 3% auto;
+	margin-bottom:30%;
+	margin-top:30%;
+}
+
+
+div.sales-executive-list
+{
+	display:inline-block;
+	margin-top:3%;
+	margin-left:20%;
+	width:78%;
+	height:auto;
+}
+div.sales-executive-list a:hover
+{
+	cursor:pointer;
+}
+
+div.form-wrapper
+{
+	width:90%;
+	height:auto;
+	margin: 0 auto;
+	margin-top:5%;
+}
+
+div.sub-wrapper
+{
+	padding:3.5%;
+	background-color:white;
+	box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.2);
+	margin:1.5%;
+}
+
+div.sub-wrapper-inline
+{
+	vertical-align:top;
+	height:30%;
+	padding:3.5%;
+	background-color:white;
+	width:46%;
+	box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.2);
+	margin:1.5%;
+	display:inline-block;
+}

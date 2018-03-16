@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>EXECUTIVE FORM - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<script type="text/javascript" src="{% static "js/salesStatistics.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="\ERP\sales_main\{{ current_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="sales_form" action="/ERP/sales_statistics_form/{{ data.uuid }}/{{ target_user }}/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display:none">
+				  <label for="name">uuid</label>
+				  <input type="text" class="form-control" name="uuid"  id="uuid"
+					 placeholder="uuid" value="{{ data.uuid }}">
+			    </div>
+                <div class="form-group" style="display:none">
+				  <label for="name">uuid</label>
+				  <input type="text" class="form-control" name="target_user"  id="target_user"
+					 placeholder="uuid" value="{{ target_user }}">
+			    </div>
+			    <h4>简要信息</h4>
+			   <div class="form-group">
+				  <label for="name">序号</label>
+				  <input type="text" class="form-control" name="No" 
+					 placeholder="请输入序号" value="{{ data.No }}" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="date" 
+					 placeholder="请输入序号" value="{{ data.date }}" required>
+			   </div>
+               <div class="form-group">
+				  <label for="name">业务员</label>
+				  <input type="text" class="form-control" name="salesman"
+					 placeholder="请输入业务员" value="{{ data.salesman }}" required>
+			   </div>
+			   <div class="form-group">
+				   <label for="name">客户名称</label><br>
+				   <select class="form-control" name="companyName">
+						{% for nm in companyName_list %}
+						{% ifequal nm data.companyName %}
+						<option selected>{{ nm }}</option>
+						{% else %}
+						<option>{{ nm }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+				</div>
+               <div class="form-group">
+				  <label for="name">国家</label>
+				  <input type="text" class="form-control" name="country"
+					 placeholder="请输入国家" value="{{ data.country }}" required>
+			   </div>
+			   <div class="form-group" style="width:30%">
+				  <label for="name">合同号({{ data.contractNo|safe }})</label>
+				  <div class="input-group">
+					<input type="file" multiple class="form-control" name = "contractNo">
+					<span class="input-group-btn">
+						<button class="btn btn-default download-post" type="button" data-src="contractNo">
+							<i class="fa fa-download fa-lg" data-src="contractNo"></i>
+						</button>
+					</span>
+				  </div>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">产品类别</label>
+				  <br>
+				  <select class="form-control" name="productType">
+					{% ifequal data.productType 1 %}
+					 <option selected>带材</option>
+					 <option>铁芯</option>
+					 <option>器件</option>
+					{% endifequal %}
+					{% ifequal data.productType 2 %}
+					 <option>带材</option>
+					 <option selected>铁芯</option>
+					 <option>器件</option>
+					{% endifequal %}
+					{% ifequal data.productType 3 %}
+					 <option>带材</option>
+					 <option>铁芯</option>
+					 <option selected>器件</option>
+					{% endifequal %}
+				  </select>
+				</div>
+			</div>
+			<div class="sub-wrapper">
+				<div class="form-group">
+				  <label for="name">规格/型号</label><br>
+				   <select class="form-control" name="Size">
+						{% for nm in setting_size_unit_list %}
+						{% ifequal nm data.Size %}
+						<option selected>{{ nm }}</option>
+						{% else %}
+						<option>{{ nm }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+			   </div>
+                <div class="form-group">
+				  <label for="name">原来的规格(仅供参考)</label>
+				  <input type="text" class="form-control" name=""
+					 placeholder="" value="{{ data.Size }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">生产部确认发货时间</label>
+				  <input type="date" class="form-control" name="confirmDate"
+					 placeholder="请输入生产部确认发货时间" value="{{ data.confirmDate }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">货期</label>
+				  <input type="text" class="form-control" name="productDue" 
+					 placeholder="请输入货期" value="{{ data.productDue }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">剩余库存</label>
+				  <input type="text" class="form-control" name="remainStorage" 
+					 placeholder="当前剩余库存" value="{{ data.remainStorage }}" readonly>
+			   </div>
+			</div>
+			<div class="sub-wrapper">
+				<div class="form-group">
+				  <label for="name">单价</label>
+				  <input type="text" class="form-control" name="priceUnit" 
+					 placeholder="输入单价" value="{{ data.priceUnit }}" id="unit" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">订单量</label>
+				  <input type="text" class="form-control" name="orderAmount" 
+					 placeholder="请输入订单量" value="{{ data.orderAmount }}" id="amount" required>
+			   </div>
+			   <div class="form-group">
+				   <label for="name">单位</label><br>
+				   <select class="form-control" name="amount_unit">
+						{% for unit in amount_unit_list %}
+						{% ifequal unit data.amount_unit %}
+						<option selected>{{ unit }}</option>
+						{% else %}
+						<option>{{ unit }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+				</div>
+			   <div class="form-group">
+				  <label for="name">订单金额</label>
+				  <input type="text" class="form-control" name="orderPrice" 
+					 placeholder="当前订单金额" value="{{ data.orderPrice }}" readonly id="total">
+			   </div>
+			    <div class="form-group">
+				   <label for="name">货币单位</label><br>
+				   <select class="form-control" name="currency_unit">
+						{% for unit in currency_unit_list %}
+							{% ifequal unit data.currency_unit %}
+							<option selected>{{ unit }}</option>
+							{% else %}
+							<option>{{ unit }}</option>
+							{% endifequal %}
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+				  <label for="name">当前汇率</label>
+				  <input type="text" class="form-control" name="currency_rate" 
+					 placeholder="当前汇率" value="{{ data.currency_rate }}" id="currency_rate" required>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">结款方式</label>
+				  <input type="text" class="form-control" name="paymentMethod" 
+					 placeholder="当前结款方式" value="{{ data.paymentMethod }}" >
+			   </div>
+			   <div class="form-group">
+				  <label for="name">结款日期</label>
+				  <input type="date" class="form-control" name="paymentDate" 
+					 placeholder="当前结款日期" value="{{ data.paymentDate }}" >
+			   </div>
+			</div>
+			<div class="sub-wrapper">
+				<div class="form-group" style="width:20%">
+				  <label for="name">发货情况</label>
+				  <textarea class="form-control" rows="3" name="shippingAmount" readonly>{{ data.shippingAmount }}</textarea>
+				  
+			   </div>
+			   <div class="form-group" style="width:20%">
+				  <label for="name">发货单号</label>
+				  <textarea class="form-control" rows="3" name="shippingAmountActual" readonly>{{ data.shippingAmountActual }}</textarea>
+				 
+			   </div>
+			   <div class="form-group" style="width:30%">
+				  <label for="name">发货量</label>
+				  <textarea class="form-control" rows="3" name="shippingAmountDue" readonly>{{ data.shippingAmountDue }}</textarea>
+				
+			   </div>
+                 <div class="form-group" style="width:20%">
+				  <label for="name">发货日期</label>
+				  <textarea class="form-control" rows="3" name="shippingAmountDate" readonly>{{ data.shippingAmountDate }}</textarea>
+
+			   </div>
+			</div>
+			<div class="sub-wrapper">
+				<div class="form-group">
+				  <label for="name">税票情况</label>
+				  <input type="text" class="form-control" name="taxStatus" 
+					 placeholder="输入税票情况" value="{{ data.taxStatus }}" >
+			   </div>
+			   <div class="form-group">
+				  <label for="name">发货情况</label>
+				  <input type="text" class="form-control" name="deliveryStatus" 
+					 placeholder="输入发货情况" value="{{ data.deliveryStatus }}" >
+			   </div>
+                <div class="form-group">
+				  <label for="name">货款情况</label>
+				  <input type="text" class="form-control" name="moneyStatus"
+					 placeholder="输入货款情况" value="{{ data.moneyStatus }}" >
+			   </div>
+			</div>
+
+			<div class="sub-wrapper" style="text-align:center">
+			   <div class="form-group" style="width:80%">
+				<label for="name">备注</label>
+				<textarea class="form-control" rows="3" name="comments">{{ data.comments }}</textarea>
+			  </div>
+			</div>
+			<div style="width:20%; margin:0 auto; margin-bottom: 10px">
+                {% if is_salesman %}
+			    <button type="submit" class="btn btn-primary" style="width:95%">提交</button>
+                {% else %}
+                <button type="submit" class="btn btn-primary" style="width:95%" disabled>提交</button>
+                {% endif %}
+			</div>
+		</form>
+	</div>
+</body>
+</html>

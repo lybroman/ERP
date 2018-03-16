@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>PRODUCE STATISTICS List - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="{% static "js/jquery-latest.js" %}"></script>
+<script src="{% static "js/jquery.tablesorter.js" %}"></script>
+<script>
+$(document).ready(function(){
+	$("#sortTable").tablesorter();
+    $(".usage").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#item_new_usage").val()) || !re.test($("#item_goback_usage").val()) || !re.test($("#item_londerful_usage").val()))
+			{
+				$("#item_usage").val(-1)
+                $("#item_muhejin_rate").val(-1)
+			}
+			else
+			{
+				$("#item_usage").val(parseFloat($("#item_new_usage").val()) + parseFloat($("#item_goback_usage").val()) +parseFloat($("#item_londerful_usage").val()))
+                $("#item_muhejin_rate").val(parseFloat($("#item_weight").val()) / parseFloat($("#item_usage").val()))
+			}
+
+		})
+
+    $(".weight").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#item_A").val()) || !re.test($("#item_B").val()) || !re.test($("#item_C").val()) || !re.test($("#item_D").val()))
+			{
+                $("#item_pass_weight").val(-1)
+			}
+			else
+            {
+				$("#item_pass_weight").val(parseFloat($("#item_A").val()) + parseFloat($("#item_B").val()) +parseFloat($("#item_C").val()))
+                $("#item_rate").val(parseFloat($("#item_pass_weight").val()) / parseFloat($("#item_weight").val()))
+			}
+
+		})
+
+    $("#item_weight").change(function(evt){
+			var re = /^[0-9]+.?[0-9]*$/;
+			if (!re.test($("#item_weight").val()))
+			{
+				$("#item_rate").val(-1)
+                $("#item_muhejin_rate").val(-1)
+			}
+			else
+			{
+                $("#item_pass_weight").val(parseFloat($("#item_A").val()) + parseFloat($("#item_B").val()) +parseFloat($("#item_C").val()))
+                $("#item_rate").val(parseFloat($("#item_pass_weight").val()) / parseFloat($("#item_weight").val()))
+                if (re.test($("#item_usage").val()))
+                {
+                    $("#item_muhejin_rate").val(parseFloat($("#item_weight").val()) / parseFloat($("#item_usage").val()))
+                }
+			}
+		})
+})
+</script>
+</head>
+<body class="grey-scale">
+	<!--div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="#Home"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="#Login"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div -->
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="produce_statistics_list" action="/ERP/produce_statistics_pendai/{{ data.uuid }}/{{ target_user }}/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="form-group" style="display:None">
+              <label for="name">uuid</label>
+              <input type="text" class="form-control" name="uuid"
+                 placeholder="uuid" value="{{ data.uuid }}" >
+            </div>
+			<h3>喷带</h3>
+            <div class="sub-wrapper">
+			    <div class="form-group">
+				  <label for="name">生产批次</label>
+				  <input type="text" class="form-control" name="item_id"
+					 placeholder="请输入生产批次(请保证唯一性)" value="{{ data.item_id }}" required>
+			    </div>
+                <div class="form-group" style="display: None">
+				  <label for="name"><a href="/ERP/produce_request_form/{{ data.target_user }}/{{ data.produce_uuid }}">生产单号</a></label>
+				  <input type="text" class="form-control" name="item_buyNo"
+					 placeholder="请输入生产单号" value="{{ data.item_buyNo }}" readonly>
+			    </div>
+				<div class="form-group">
+				  <label for="name">日期</label>
+				  <input type="date" class="form-control" name="produce_date" 
+					 placeholder="请输入日期" value="{{ data.produce_date }}" required>
+			    </div>
+                <div class="form-group">
+				  <label for="name">规格/型号</label><br>
+				   <select class="form-control" name="item_size">
+						{% for nm in setting_size_unit_list %}
+						{% ifequal nm data.item_size %}
+						<option selected>{{ nm }}</option>
+						{% else %}
+						<option>{{ nm }}</option>
+						{% endifequal %}
+						{% endfor %}
+					</select>
+			   </div>
+				<div class="form-group">
+				  <label for="name">原来的规格(仅供参考)</label>
+				  <input type="text" class="form-control" name=""
+					 placeholder="请输入规格" value="{{ data.item_size }}" readonly>
+			    </div>
+				<div class="form-group">
+				  <label for="name">班组</label>
+				  <input type="text" class="form-control" name="item_class"
+					 placeholder="请输入班组" value="{{ data.item_class }}" required>
+			    </div>
+				<div class="form-group" style="display: None;">
+				  <label for="name">炉号</label>
+				  <input type="text" class="form-control" name="item_container"
+					 placeholder="请输入炉号" value="{{ data.item_container }}" >
+			    </div>
+				<br>
+				<div class="form-group">
+				  <label for="name">A</label>
+				  <input type="text" class="form-control weight" name="item_A" id="item_A"
+					 placeholder="请输入A" value="{{ data.item_A }}" required>
+			    </div>
+				<div class="form-group">
+				  <label for="name">B</label>
+				  <input type="text" class="form-control weight" name="item_B" id="item_B"
+					 placeholder="请输入B" value="{{ data.item_B }}" required>
+			    </div>
+				<div class="form-group">
+				  <label for="name">C</label>
+				  <input type="text" class="form-control weight" name="item_C" id="item_C"
+					 placeholder="请输入C" value="{{ data.item_C }}" required>
+			    </div>
+				<div class="form-group">
+				  <label for="name">D</label>
+				  <input type="text" class="form-control weight" name="item_D" id="item_D"
+					 placeholder="请输入D" value="{{ data.item_D }}" required>
+			    </div>
+				<br>
+                <div class="form-group">
+				  <label for="name">合格重量</label>
+				  <input type="text" class="form-control" name="item_pass_weight"
+					 placeholder="请输入合格重量" value="{{ data.item_pass_weight }}"  id="item_pass_weight" >
+			    </div>
+				<div class="form-group">
+				  <label for="name">总重量</label>
+				  <input type="text" class="form-control" name="item_weight" 
+					 placeholder="请输入总重量" value="{{ data.item_weight }}"  id="item_weight" required>
+			    </div>
+                <div class="form-group">
+				  <label for="name">合格率</label>
+				  <input type="text" class="form-control" name="item_rate" id="item_rate"
+					 placeholder="请输入合格率" value="{{ data.item_rate }}" >
+			    </div>
+                <br>
+				<div class="form-group">
+				  <label for="name">母合金使用情况</label>
+				  <input type="text" class="form-control" name="item_usage" id="item_usage"
+					 placeholder="请输入母合金使用情况" value="{{ data.item_usage }}" readonly>
+			    </div>
+                <div class="form-group">
+				  <label for="name">新冶料</label>
+				  <input type="text" class="form-control usage" name="item_new_usage" id="item_new_usage"
+					 placeholder="请输入新冶料" value="{{ data.item_new_usage }}" required>
+			    </div>
+                <div class="form-group">
+				  <label for="name">回炉料</label>
+				  <input type="text" class="form-control usage" name="item_goback_usage" id="item_goback_usage"
+					 placeholder="请输入回炉料" value="{{ data.item_goback_usage }}" required>
+			    </div>
+                <div class="form-group">
+				  <label for="name">朗峰冶炼料</label>
+				  <input type="text" class="form-control usage" name="item_londerful_usage" id="item_londerful_usage"
+					 placeholder="请输入朗峰冶炼料" value="{{ data.item_londerful_usage }}" required>
+			    </div>
+				<div class="form-group">
+				  <label for="name">母合金利用率</label>
+				  <input type="text" class="form-control" name="item_muhejin_rate" id="item_muhejin_rate"
+					 placeholder="请输入母合金利用率" value="{{ data.item_muhejin_rate }}" readonly>
+			    </div>
+				<div class="form-group">
+				  <label for="name">备注</label>
+				  <input type="text" class="form-control" name="item_comment" 
+					 placeholder="请输入备注" value="{{ data.item_comment }}" >
+			    </div>
+                <br><br>
+                <div class="form-group">
+				  <label for="name">原材料采购批次（多个批次请用英文分号“;”隔开）</label>
+                    {% for item in purchase_No_html %}
+                        <a href="/ERP/purchase/detail_uuid/{{ item.purchase_uuid }}/">{{ item.purchase_No }}</a> ;
+                    {% endfor %}
+                    <br>
+				  <input  class="form-control" name="purchase_Nos"
+                            value="{{ data.purchase_Nos }}">
+                  </input>
+
+			    </div>
+				<div style="width:5%; margin:0 auto; margin-top:50px;">
+					<button type="submit" class="btn btn-primary" style="width:100%">提交</button>
+				</div>
+			</div>
+	</div>
+</body>
+</html>

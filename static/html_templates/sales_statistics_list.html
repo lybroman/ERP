@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+{% load static %}
+{% load staticfiles %}
+<title>SALES-{{ user.username }}</title>
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<link rel="stylesheet", type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="{% static "css/jquery.dataTables.css" %}">
+<style>
+a{
+	text-decoration:none
+}
+</style>
+<script type="text/javascript" charset="utf8" src="{% static "js/jquery.dataTables.js" %}"></script>
+<script>
+$(document).ready(function(){
+ var t = $('#sortTable').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 0, 'asc' ]]
+    } );
+
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+})
+</script>
+</head>
+<body>
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+                    <li><a href="\ERP\sales_main\{{ current_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="sales-executive-list">
+		<table class="table" id="sortTable">
+		   <caption>销售统计表</caption>
+		   <thead>
+			  <tr>
+                  <th>No</th>
+				 <th>序号</th>
+				 <th>日期</th>
+                 <th>数量</th>
+				 <th>计量单位</th>
+				 <th>总金额</th>
+				 <th>货币单位</th>
+				 <th>业务员</th>
+				 <th>客户</th>
+                  <th>国家</th>
+				 <th>品名</th>
+				 <th>最后更新日期</th>
+				 <th>操作</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+			 {% for item in data %}
+				<tr>
+                    <td>{{ item.no }}</td>
+					<td><a id="index" data-src="{{ item.uuid }}" href="/ERP/sales_statistics_form/{{ item.uuid }}/{{ target_user }}">{{ item.index }}</a></td>
+					<td>{{ item.date }}</td>
+                    <td>{{ item.orderAmount }}</td>
+					<td>{{ item.amount_unit}}</td>
+					<td>{{ item.orderPrice }}</td>
+					<td>{{ item.currency_unit}}</td>
+                    <td><a id="salesman" data-src="{{ item.salesman }}" href="/ERP/sales_statistics_agent/{{ item.salesman }}">{{ item.salesman }}</a></td>
+					 <td><a id="customer" data-src="{{ item.customer }}" href="/ERP/sales_statistics_customer/{{ item.customer }}/{{ target_user }}">{{ item.customer }}</a></td>
+					<td><a id="nation" data-src="{{ item.nation }}" href="/ERP/sales_statistics_nation/{{ item.nation }}/{{ target_user }}">{{ item.nation }}</a></td>
+                    <td>{{ item.productName }}</td>
+					<td>{{ item.last_revise_date }}</td>
+					<td><a href="/ERP/sales_statistics_form/{{ item.uuid }}/{{ target_user }}?operation=delete"><i class="fa fa-trash fa-lg"></i></a></td>
+					 <!--td>{{ item.size }}</td>
+					 <td>{{ item.orderAmount }}</td>
+					 <td>{{ item.confirmDate }}</td>
+					 <td>{{ item.productDue }}</td>
+					 <td>{{ item.remainStorage }}</td>
+					 <td>{{ item.order }}</td>
+					 <td>{{ item.order }}</td-->
+				  </tr>
+			 {% endfor %}
+			  <!--tr class="success">
+				 <td><a>{{ index }}</a></td>
+				 <td><a>{{ customer }}</a></td>
+				 <td><a>{{ sales }}</a></td>
+				 <td>{{ company }}</td>
+				 <td><a>{{ nation }}</a></td>
+				 <td>{{ category }}</td>
+				 <td>{{ success }}</td>
+			  </tr>
+			  <tr class="warning">
+				 <td><a>{{ index }}</a></td>
+				 <td><a>{{ customer }}</a></td>
+				 <td><a>{{ sales }}</a></td>
+				 <td>{{ company }}</td>
+				 <td><a>{{ nation }}</a></td>
+				 <td>{{ category }}</td>
+				 <td>{{ warning }}</td>
+			  </tr>
+			  <tr class="danger">
+				 <td><a>{{ index }}</a></td>
+				 <td><a>{{ customer }}</a></td>
+				 <td><a>{{ sales }}</a></td>
+				 <td>{{ company }}</td>
+				 <td><a>{{ nation }}</a></td>
+				 <td>{{ category }}</td>
+				 <td>{{ danger }}</td>
+			  </tr-->
+		   </tbody>
+		</table>
+	</div>
+	<div class="fixed-left-nav">
+		<h4>E R P</h4>
+		<img class="logo-img" src="{% static "imgs/londerful_logo.png" %}"/>
+		<div class="nav-list">
+			<a href="/ERP/sales_statistics_form/new_form/{{ target_user }}" data-src="HOME">添加</a>
+		</div>
+	</div>
+
+</body>
+</html>

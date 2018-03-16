@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>Statistics - {{ data.salesAgent }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<script type="text/javascript" src="{% static "js/salesStatisticsAgent.js" %}"></script>
+<script src="{% static "js/jquery-latest.js" %}"></script>
+<script src="{% static "js/jquery.tablesorter.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script>
+$(document).ready(function(){
+$("#sortTable_0").tablesorter();
+$("#sortTable_1").tablesorter();
+$(function () {
+    $('#container-sales').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: "{{ data.startDate }} ~ {{ data.endDate }}销售额"
+        },
+        xAxis: {
+            categories: {{ data.salesCustomerList|safe }},
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '销量'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} CNY</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: ' 业绩/公司 ',
+            data: {{ data.salesAmountByCustomer }}
+			}],
+		credits: {  
+			enabled: false  
+		} 
+	});
+	});
+	$(function () {
+    $('#container-trend').highcharts({
+        title: {
+            text: '{{ data.selectedYear}}月销售统计',
+            x: -20 //center
+        },
+        xAxis: {
+            categories: {{ data.monthList|safe }}
+        },
+        yAxis: {
+            title: {
+                text: ''
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: ' CNY'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [{
+            name: '销售额/月份',
+            data: {{ data.salesAmountByMonth }}
+			}],
+		credits: {  
+			enabled: false  
+		}
+    });
+	});
+})
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="\ERP\sales_main\{{ current_user }}"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div id="salesAgent" style="display:none" data-src="{{ data.salesAgent }}"> </div>
+	<div class="sub-wrapper">
+		<form class="form-inline" role="form" id="sales_form" action="/ERP/sales_statistics_agent/{{ data.salesAgent }}/" enctype="multipart/form-data" method="post" target="_parent">
+		 <div class="form-group">
+			  <label for="name">起始日期</label>
+			  <input type="date" class="form-control" name="startDate"
+				 placeholder="请输入起始日期" value="{{ data.startDate }}">
+		</div>
+		<div class="form-group">
+			  <label for="name">结束日期</label>
+			  <input type="date" class="form-control" name="endDate"
+				 placeholder="请输入结束日期" value="{{ data.endDate }}">
+		 </div>
+		 <br>
+		 <button type="submit" class="btn btn-primary">更新</button>
+		</form>
+		<table class="table" id="sortTable_0">
+		   <caption>{{ data.salesAgent }} - {{ data.startDate}} ~ {{ data.endDate}} 销售业绩</caption>
+		   <thead>
+			  <tr>
+				 <th>月份</th>
+				 <th>月销售额</th>
+			  </tr>
+		   </thead>
+		   <tbody>
+		   {% for key, value in data.salesAmountByMonth_dict.items %}
+			<tr class="active">
+					<td>{{ key }}</td>
+					<td>{{ value }}</td>
+			</tr>
+			{% endfor %}
+		   </tbody>
+		</table>
+	</div>
+	<div class="sub-wrapper">
+		<table class="table" id="sortTable_1">
+		   <caption>{{ data.salesAgent }} - {{ data.startDate}} ~ {{ data.endDate}}</caption>
+		   <thead>
+				<th>客户名称</th>
+				<th>{{ data.startDate}} ~ {{ data.endDate}}销售额</th>
+		   </thead>
+		   <tbody>
+				{% for key, value in data.salesAmountByCustomer_dict.items %}
+				<tr class="active">
+					<td>{{ key }}</td>
+					<td>{{ value }}</td>
+				</tr>
+				{% endfor %}
+		   </tbody>
+		</table>
+	</div>
+	<div class="form-wrapper">
+		<div id="nation" style="display:none" data-src="{{ data.nation }}"> 
+		</div>
+		<div class="sub-wrapper">
+			<div id="container-sales" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+			<div id="container-trend" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description", content="ERP">
+<meta name="author", content="lybroman@hotmail.com">
+<!--meta http-equiv="refresh" content="300"-->
+<title>Request Form - {{ user.username }}</title>
+{% load static %}
+{% load staticfiles %}
+<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet", type="text/css" href="{% static "css/font-awesome.min.css" %}"/>
+<script type="text/javascript" src="{% static "js/salesform.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script>
+$(function () {
+    var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'container',
+            events: {
+                load: function () {
+                    
+                    // Draw the flow chart
+                    var ren = this.renderer,
+                        colors = Highcharts.getOptions().colors,
+                        rightArrow = ['M', 0, 0, 'L', 100, 0, 'L', 95, 5, 'M', 100, 0, 'L', 95, -5],
+                        leftArrow = ['M', 100, 0, 'L', 0, 0, 'L', 5, 5, 'M', 0, 0, 'L', 5, -5];
+                    
+                    
+                    
+                    // Separator, client from service
+                    ren.path(['M', 250, 40, 'L', 250, 300])
+                        .attr({
+                            'stroke-width': 2,
+                            stroke: 'silver',
+                            dashstyle: 'dash'
+                        })
+                        .add();
+                    
+                    // Separator, CLI from service
+                    ren.path(['M', 440, 40, 'L', 440, 300])
+                        .attr({
+                            'stroke-width': 2,
+                            stroke: 'silver',
+                            dashstyle: 'dash'
+                        })
+                        .add();
+                    
+                    // Headers
+                    ren.label('提出申请', 50, 40)
+                        .css({
+                            fontWeight: 'bold'
+                        })
+                        .add();
+                    ren.label('经理确认', 320, 40)
+                        .css({
+                            fontWeight: 'bold'
+                        })
+                        .add();
+                    ren.label('任务完成', 460, 40)
+                        .css({
+                            fontWeight: 'bold'
+                        })
+                        .add();
+        
+                    
+                    ren.label('申请人： {{ data.applicant }}', 50, 82)
+                        .attr({
+                            fill: colors[0],
+                            stroke: 'white',
+                            'stroke-width': 2,
+                            padding: 5,
+                            r: 5
+                        })
+                        .css({
+                            color: 'white'
+                        })
+                        .add()
+                        .shadow(true);
+                    
+                    
+                    ren.path(rightArrow)
+                         .attr({
+                             'stroke-width': 2,
+                             stroke: colors[3]
+                         })
+                        .translate(185, 95)
+                        .add();
+                             
+                    ren.label('{{ data.date }}', 185, 75)
+                        .css({
+                            fontSize: '10px',
+                            color: colors[3]
+                        }) 
+                        .add();
+                    
+                    ren.label('批准人:<br> {{ data.approver }}', 310, 82)
+                        .attr({
+                            r: 5,
+                            fill: colors[1]
+                        })
+                        .css({
+                            color: 'white',
+                            fontWeight: 'bold'
+                        })
+                        .add();
+					
+					ren.path(['M', 350, 130, 'L', 350, 205, 'L', 345, 200, 'M', 350, 205, 'L', 355, 200])
+                         .attr({
+                             'stroke-width': 2,
+                             stroke: colors[3]
+                         })
+                         .add();
+                             
+                    ren.label('经理确认', 355, 170)
+                        .css({
+                            color: colors[3],
+                            fontSize: '10px'
+                        })                       
+                        .add();
+						
+					ren.label('生产调整予批准', 310, 222)
+                        .attr({
+                            r: 5,
+                            fill: colors[4]
+                        })
+                        .css({
+                            color: 'white',
+                            fontWeight: 'bold'
+                        })
+                        .add();
+                    
+                    // Script label
+                    ren.label('采购员： {{ data.buyer }} 确认采购', 520, 82)
+                        .attr({
+                            fill: colors[2],
+                            stroke: 'white',
+                            'stroke-width': 2,
+                            padding: 5,
+                            r: 5
+                        })
+                        .css({
+                            color: 'white'
+                        })
+                        .add()
+                        .shadow(true);
+						
+					ren.label('生产: {{ data.producer }} 确认生产', 520, 112)
+                        .attr({
+                            fill: colors[6],
+                            stroke: 'white',
+                            'stroke-width': 2,
+                            padding: 5,
+                            r: 5
+                        })
+                        .css({
+                            color: 'white'
+                        })
+                        .add()
+                        .shadow(true);
+
+                    // Arrow from PhantomJS to Script
+                    ren.path(rightArrow)
+                         .attr({
+                             'stroke-width': 2,
+                             stroke: colors[2]
+                         })
+                        .translate(415, 95)
+                         .add();
+                             
+                    ren.label('', 415, 75)
+                        .css({
+                            color: colors[2],
+                            fontSize: '10px'
+                        })
+                        .add();
+					ren.path(rightArrow)
+                         .attr({
+                             'stroke-width': 2,
+                             stroke: colors[6]
+                         })
+                        .translate(415, 120)
+                         .add();
+                             
+                    ren.label('', 415, 105)
+                        .css({
+                            color: colors[6],
+                            fontSize: '10px'
+                        })
+                        .add();
+                    
+                    
+                }
+            }
+        },
+        title: {
+            text: '请求处理流程示意图'
+        },
+		credits: {  
+			enabled: false  
+		} 
+            
+    });
+});				
+</script>
+</head>
+<body class="grey-scale">
+	<div class="fixed_header">
+		<nav class="navbar navbar-default navbar-custom" role="navigation">
+		   <div class="navbar-header">
+			  <a class="navbar-brand" href="#">ERP</a>
+			  <br/>
+		   </div>
+				<ul class="nav navbar-nav navbar-right smooth-scroll">
+				   <li><a href="#Home"><i class="fa fa-home fa-lg spacer"></i>Home</a></li>
+				   <li><a href="\ERP\login\"><i class="fa fa-sign-in fa-lg spacer"></i>Log-in</a></li>
+				   <li><a href="\ERP\logout\"><i class="fa fa-sign-out fa-lg spacer"></i>Log-out</a></li>
+				   <li><a href="\ERP\message\"><i class="fa fa-warning fa-lg spacer"></i>Messages</a></li>
+				   <li><a href="\ERP\request\"><i class="fa fa-file-text fa-lg spacer"></i>Request</a></li>
+				   <li style="visibility:hidden"><a href=""><i class="spacer"></i> </a></li>
+				</ul>
+		</nav>
+	</div>
+	<div class="form-wrapper">
+		<form class="form-inline" role="form" id="sales_form" action="/ERP/request/{{ data.uuid }}/" enctype="multipart/form-data" method="post" target="_parent">
+			<div class="sub-wrapper">
+				<div class="form-group" style="display:none">
+				  <label for="name">uuid</label>
+				  <input type="text" class="form-control" name="uuid"  id="uuid"
+					 placeholder="uuid" value="{{ data.uuid }}">
+				</div>
+				<h4>简要信息</h4>
+			   <div class="form-group" style="width:5%">
+				  <label for="name">序号</label>
+				  <input type="text" class="form-control" name="No" 
+					 placeholder="请输入序号" value="{{ data.No }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">主题</label>
+				  <input type="text" class="form-control" name="title" 
+					 placeholder="请输入主题" value="{{ data.title }}" readonly>
+			   </div>
+			   <div class="form-group">
+					<label for="name">产品类别</label></br>
+						<select class="form-control" name="category">
+							{% ifequal data.category "生产材料" %}
+							 <option selected>生产材料</option>
+							{% else %}
+							 <option>生产材料</option>
+							{% endifequal %}
+							
+							{% ifequal data.category "辅助材料" %}
+							 <option selected>辅助材料</option>
+							{% else %}
+							<option>辅助材料</option>
+							{% endifequal %}
+							
+							{% ifequal data.category "配套件" %}
+							<option selected>配套件</option>
+							 {% else %}
+							<option>配套件</option>
+							{% endifequal %}
+							
+							{% ifequal data.category "仪器设备" %}
+							 <option selected>仪器设备</option>
+							 {% else %}
+							 <option>仪器设备</option>
+							{% endifequal %}
+							
+							{% ifequal data.category "电工材料" %}
+							 <option selected>电工材料</option>
+							 {% else %}
+							 <option>电工材料</option>
+							{% endifequal %}
+							{% ifequal data.category "办公用品" %}
+							 <option selected>办公用品</option>
+							  {% else %}
+							 <option>办公用品</option>
+							{% endifequal %}
+						  </select>
+				</div>
+			   <div class="form-group">
+				  <label for="name">提交日期</label>
+				  <input type="date" class="form-control" name="date" 
+					 placeholder="请输入日期" value="{{ data.date }}" readonly>
+			   </div>
+			   <div class="form-group">
+				  <label for="name">截止日期</label>
+				  <input type="date" class="form-control" name="dueDate" 
+					 placeholder="请输入交货日期" value="{{ data.dueDate }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">状态</label>
+					{% ifequal data.status "NE" %}
+					  <input type="text" class="form-control" name="status" 
+						 placeholder="当前状态" value="待审批" readonly>
+					{% endifequal %}
+					{% ifequal data.status "RE" %}
+					  <input type="text" class="form-control" name="status" 
+						 placeholder="当前状态" value="已批准" readonly>
+					{% endifequal %}
+					{% ifequal data.status "CO" %}
+					  <input type="text" class="form-control" name="status" 
+						 placeholder="当前状态" value="采购流程" readonly>
+					{% endifequal %}					
+				</div>
+			</div>
+			<div class="sub-wrapper">
+			  <div id="container" style="width:900px; height:400px; margin:0 auto"></div>
+			</div>
+			<div class="sub-wrapper">
+				<h4>详情</h4>
+			   <div class="form-group" style="width:50%">
+				  <label for="name">链接 <a href="{{ data.url }}"><i class="fa fa-link fa-lg"></i></a></label>
+				   {% ifequal data.full_name data.buyer %}
+				    <input type="text" class="form-control" name="url" 
+					 placeholder="请输入链接" value="{{ data.url }}">
+					{% else %}
+					 <input type="text" class="form-control" name="url" 
+					 placeholder="请输入链接" value="{{ data.url }}" readonly>
+					{% endifequal %}
+			   </div>
+			   <br>
+			   <div class="form-group" style="width:50%">
+				  <label for="name">描述</label>
+				  <input type="text" class="form-control" name="content" 
+					 placeholder="请输入描述" value="{{ data.content }}">
+			   </div>
+			</div>
+            {% if istable %}
+            <div class="sub-wrapper">
+		    <table class="table" id="sortTable">
+               <caption>生产执行表</caption>
+                   <thead>
+                      <tr>
+                         <th>序号</th>
+                          <th>生产单号</th>
+                         <th>日期</th>
+                         <th>客户名称／代号</th>
+                         <th>产品类别</th>
+                         <th>数量</th>
+                         <th>生产状态</th>
+                         <th>需求状态</th>
+                         <th>备注</th>
+                      </tr>
+                   </thead>
+                   <tbody>
+                     {% for item in tabledata %}
+                            {% ifequal item.statement "重要" %}
+                            <tr class="danger">
+                            {% else %}
+                            <tr class="success">
+                            {% endifequal %}
+                                 <td>{{ item.no }}</td>
+                                 <td>{{ item.index }}</td>
+                                 <td>{{ item.submit_date }}</td>
+                                 <td>{{ item.customer }}</td>
+                                 <td>{{ item.category }}</td>
+                                 <td>{{ item.amount }}</td>
+                                 <td>{{ item.produce_status }}</td>
+                                 <td>{{ item.statement }}</td>
+                                 <td>{{ item.comment }}</td>
+                             </tr>
+                     {% endfor %}
+                   </tbody>
+                </table>
+            </div>
+            {% endif %}
+			<div class="sub-wrapper">
+			<h4>采购明细</h4>
+				<div class="form-group">
+				  <label for="name">品名／规格</label>
+				  <input type="text" class="form-control" name="size" 
+					 placeholder="请输入品名／规格" value="{{ data.size }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">单位</label>
+				  <input type="text" class="form-control" name="unit" 
+					 placeholder="请输入单位" value="{{ data.unit }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">订购数量</label>
+				  <input type="text" class="form-control" name="orderAmount" 
+					 placeholder="请输入数量" value="{{ data.orderAmount }}">
+			   </div>
+			   <div class="form-group">
+				  <label for="name">总金额</label>
+				  <input type="text" class="form-control" name="totalPrice" 
+					 placeholder="请输入总金额" value="{{ data.totalPrice }}">
+			   </div>
+			   <div class="form-group">
+				   <label for="name">采购状态</label></br>
+				   {% ifequal data.full_name data.buyer %}
+				   <select class="form-control" name="purchase_state">
+				   {% else %}
+				    <select class="form-control" name="purchase_state" readonly>
+				   {% endifequal %}
+						 {% ifequal data.purchase_state "待打款" %}
+						 <option selected>待打款</option>
+						{% else %}
+						 <option>待打款</option>
+						 {% endifequal %}
+						 {% ifequal data.purchase_state "物流" %}
+						 <option selected>物流</option>
+						{% else %}
+						 <option>物流</option>
+						 {% endifequal %}
+						 {% ifequal data.purchase_state "到货付款" %}
+						 <option selected>到货付款</option>
+						{% else %}
+						 <option>到货付款</option>
+						 {% endifequal %}
+						 {% ifequal data.purchase_state "N/A" %}
+						 <option selected>N/A</option>
+						{% else %}
+						 <option>N/A</option>
+						 {% endifequal %}
+					</select>
+			   </div>
+				
+			</div>
+			<div class="sub-wrapper">
+			   <div class="form-group">
+				  <label for="name">申请人</label>
+				  <input type="text" class="form-control" name="applicant" 
+					 placeholder="当前用户" value="{{ data.applicant }}" readonly>
+			   </div>
+			   <div class="form-group">
+					<label for="name">批准人</label></br>
+					<select class="form-control" name="approver">
+						{% for approver in data.approver_list %}
+							{% ifequal approver data.approver %}
+								<option selected>{{ approver }}</option>
+							{% else %}
+								<option>{{ approver }}</option>
+							{% endifequal %}
+						{% endfor %}
+					</select>
+			   </div>
+			   <div class="form-group">
+					<label for="name">采购员</label></br>
+					<select class="form-control" name="buyer">
+						{% for buyer in data.buyer_list %}
+							{% ifequal buyer data.buyer %}
+								<option selected>{{ buyer }}</option>
+							{% else %}
+								<option>{{ buyer }}</option>
+							{% endifequal %}
+						{% endfor %}
+					</select>
+			   </div>
+			   <div class="form-group">
+					<label for="name">生产</label></br>
+					<select class="form-control" name="producer">
+						{% for producer in data.producer_list %}
+							{% ifequal producer data.producer %}
+								<option selected>{{ producer }}</option>
+							{% else %}
+								<option>{{ producer }}</option>
+							{% endifequal %}
+						{% endfor %}
+					</select>
+			   </div>
+			   <br>
+			   <br>
+			   <div style="width:60%; height:100%; margin:0 auto;">
+					{% ifequal data.full_name data.applicant %}
+						<button type="submit" class="btn btn-primary" style="width:24%;" name="operation" value="NE">提交</button>
+					{% else %}
+						<button type="submit" class="btn btn-primary" style="width:24%;" name="operation" value="NE" disabled>提交</button>
+					{% endifequal %}
+					{% ifequal data.full_name data.approver %}
+						<button type="submit" class="btn btn-primary" style="width:24%;" name="operation" value="RE">批准</button>
+                        <button type="submit" class="btn btn-primary" style="width:24%;" name="operation" value="NO">拒绝</button>
+					{% else %}
+						<button type="submit" class="btn btn-primary" style="width:24%;" name="operation" value="RE" disabled>批准</button>
+                        <button type="submit" class="btn btn-primary" style="width:24%;" name="operation" value="NO" disabled>拒绝</button>
+					{% endifequal %}
+					{% ifequal data.full_name data.buyer %}
+						<button type="submit" class="btn btn-primary" style="width:24%;" name="operation" value="CO">采购更新</button>
+					{% else %}
+						<button type="submit" class="btn btn-primary" style="width:24%;" name="operation" value="CO" disabled>采购更新</button>
+					{% endifequal %}
+			   </div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
